@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Arquivos de Origem">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Arquivos de Recurso">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainForm.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainForm.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shell\hdl_dump_090.exe" />
+    <None Include="shell\libapa.dll" />
+    <None Include="shell\libfakeps2sdk.dll" />
+    <None Include="shell\libiomanX.dll" />
+    <None Include="shell\libpfs.dll" />
+    <None Include="shell\OPL_Manager_HDD_ART_Batcher_v1.bat">
+      <Filter>Arquivos de Origem</Filter>
+    </None>
+    <None Include="shell\pfs.bat">
+      <Filter>Arquivos de Origem</Filter>
+    </None>
+    <None Include="shell\pfsdir.bat">
+      <Filter>Arquivos de Origem</Filter>
+    </None>
+    <None Include="shell\pfsshell.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ICONS\file.png">
+      <Filter>Arquivos de Recurso</Filter>
+    </Image>
+    <Image Include="ICONS\folder.png">
+      <Filter>Arquivos de Recurso</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <Filter>Arquivos de Recurso</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
