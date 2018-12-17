@@ -3,6 +3,7 @@
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace PFSHDDManager;
+using namespace Windows;
 
 [STAThreadAttribute]
 void main(array<String^>^ args) {
@@ -114,3 +115,47 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 {
 	return System::Void();
 }
+
+
+System::Void PFSHDDManager::MainForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
+	System::Diagnostics::Process^ PFS = gcnew System::Diagnostics::Process;
+	PFS->StartInfo->FileName = "shell\\hdl_dump_090.exe";
+	PFS->StartInfo->Arguments = "query";
+	//PFS->StartInfo->FileName = "cmd";
+	PFS->StartInfo->CreateNoWindow = true;
+	PFS->StartInfo->ErrorDialog = false;
+	PFS->StartInfo->UseShellExecute = false;
+	PFS->StartInfo->RedirectStandardError = true;
+	PFS->StartInfo->RedirectStandardInput = true;
+	PFS->StartInfo->RedirectStandardOutput = true;
+	PFS->EnableRaisingEvents = true;
+	PFS->Start();
+	String^ output = PFS->StandardOutput->ReadToEnd();
+	richTextBox1->Text = output;
+}
+
+
+System::Void PFSHDDManager::MainForm::StartProcess(System::String^ fileName, System::String^ arguments)
+{
+	////  Create the process start info.
+	//var processStartInfo = new ProcessStartInfo(fileName, arguments);
+
+	////  Set the options.
+	//processStartInfo.UseShellExecute = false;
+	//processStartInfo.ErrorDialog = false;
+	//processStartInfo.CreateNoWindow = true;
+
+	////  Specify redirection.
+	//processStartInfo.RedirectStandardError = true;
+	//processStartInfo.RedirectStandardInput = true;
+	//processStartInfo.RedirectStandardOutput = true;
+}
+
+/*System::Void PFSHDDManager::MainForm::log() {
+	FILE* fp;
+	char result[1000];
+	fp = popen("ls -al .", "r");
+	fread(result, 1, sizeof(result), fp);
+	fclose(fp);
+	printf("%s", result);
+}*/

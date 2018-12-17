@@ -1,13 +1,12 @@
 #pragma once
-
 namespace PFSHDDManager {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+
 
 	/// <summary>
 	/// Sumário para MainForm
@@ -60,6 +59,9 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 	private: System::Windows::Forms::ComboBox^  DRIVE_LTR;
 	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::RichTextBox^  richTextBox1;
+
+
 
 
 
@@ -101,8 +103,9 @@ namespace PFSHDDManager {
 			this->gradeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_ICONS_SMALL = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->DRIVE_LTR = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->DRIVE_LTR = (gcnew System::Windows::Forms::ComboBox());
+			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
 			this->SuspendLayout();
@@ -218,19 +221,30 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->tableLayoutPanel1->ColumnCount = 2;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				79.95972F)));
+				59.63162F)));
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				20.04028F)));
+				40.36838F)));
 			this->tableLayoutPanel1->Controls->Add(this->button1, 1, 0);
 			this->tableLayoutPanel1->Controls->Add(this->DRIVE_LTR, 0, 0);
+			this->tableLayoutPanel1->Controls->Add(this->richTextBox1, 1, 1);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 2;
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(993, 574);
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 11.67247F)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 88.32753F)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(1303, 574);
 			this->tableLayoutPanel1->TabIndex = 3;
+			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(779, 3);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(70, 60);
+			this->button1->TabIndex = 4;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
 			// 
 			// DRIVE_LTR
 			// 
@@ -243,22 +257,20 @@ namespace PFSHDDManager {
 			this->DRIVE_LTR->TabIndex = 0;
 			this->DRIVE_LTR->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::DRIVE_LTR_SelectedIndexChanged);
 			// 
-			// button1
+			// richTextBox1
 			// 
-			this->button1->Location = System::Drawing::Point(796, 3);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(70, 60);
-			this->button1->TabIndex = 4;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
+			this->richTextBox1->Location = System::Drawing::Point(779, 69);
+			this->richTextBox1->Name = L"richTextBox1";
+			this->richTextBox1->Size = System::Drawing::Size(512, 455);
+			this->richTextBox1->TabIndex = 5;
+			this->richTextBox1->Text = L"";
 			// 
 			// MainForm
 			// 
 			this->AcceptButton = this->BTN_GO;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(993, 574);
+			this->ClientSize = System::Drawing::Size(1303, 574);
 			this->Controls->Add(this->PATH_VIEW);
 			this->Controls->Add(this->BTN_BACK);
 			this->Controls->Add(this->BTN_GO);
@@ -290,8 +302,8 @@ namespace PFSHDDManager {
 	private: System::Void notifyIcon1_MouseDoubleClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 	}
 	private: System::Void DRIVE_LTR_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-		System::Diagnostics::Process::Start("pfsshell.exe");
-	}
+	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void StartProcess(System::String^ fileName, System::String^ arguments);
+	//private: System::Void log();
 	};
 }
