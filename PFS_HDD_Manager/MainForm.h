@@ -33,13 +33,13 @@ namespace PFSHDDManager {
 				delete components;
 			}
 		}
-
+	BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
 	private: System::Collections::Generic::Stack <System::String^>  History;
 	private: System::Windows::Forms::ImageList^  PATH_VIEW_ICONS_LARGE;
 
-
+	
 
 
 	protected:
