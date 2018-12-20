@@ -1,0 +1,1 @@
+pfsshell.exe tee -a tst.txt
