@@ -33,21 +33,21 @@ namespace PFSHDDManager {
 				delete components;
 			}
 		}
-	BackgroundWorker^ teste;
+
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
 	private: System::Collections::Generic::Stack <System::String^>  History;
 	private: System::Windows::Forms::ImageList^  PATH_VIEW_ICONS_LARGE;
 
-	
+
 
 
 	protected:
 
-
+	private: System::Windows::Forms::TextBox^  TXTBX_PATH;
 	private: System::Windows::Forms::Button^  BTN_GO;
 	private: System::Windows::Forms::Button^  BTN_BACK;
-
+	private: System::Windows::Forms::ListView^  PATH_VIEW;
 	private: System::Windows::Forms::ContextMenuStrip^  PATH_VIEW_CONTEXT;
 	private: System::Windows::Forms::ToolStripMenuItem^  exibiçãoToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  íconesGrandesToolStripMenuItem;
@@ -59,9 +59,7 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 	private: System::Windows::Forms::ComboBox^  DRIVE_LTR;
 	private: System::Windows::Forms::Button^  button1;
-	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel2;
-	private: System::Windows::Forms::TextBox^  TXTBX_PATH;
-
+	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 
 
 
@@ -92,8 +90,10 @@ namespace PFSHDDManager {
 			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 			this->PATH_VIEW_ICONS_LARGE = (gcnew System::Windows::Forms::ImageList(this->components));
+			this->TXTBX_PATH = (gcnew System::Windows::Forms::TextBox());
 			this->BTN_GO = (gcnew System::Windows::Forms::Button());
 			this->BTN_BACK = (gcnew System::Windows::Forms::Button());
+			this->PATH_VIEW = (gcnew System::Windows::Forms::ListView());
 			this->PATH_VIEW_CONTEXT = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->exibiçãoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->íconesGrandesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -103,13 +103,11 @@ namespace PFSHDDManager {
 			this->gradeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_ICONS_SMALL = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->tableLayoutPanel2 = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->DRIVE_LTR = (gcnew System::Windows::Forms::ComboBox());
-			this->TXTBX_PATH = (gcnew System::Windows::Forms::TextBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->DRIVE_LTR = (gcnew System::Windows::Forms::ComboBox());
+			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
-			this->tableLayoutPanel2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// PATH_VIEW_ICONS_LARGE
@@ -119,12 +117,18 @@ namespace PFSHDDManager {
 			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(0, L"file.png");
 			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(1, L"folder.png");
 			// 
+			// TXTBX_PATH
+			// 
+			this->TXTBX_PATH->Location = System::Drawing::Point(126, 13);
+			this->TXTBX_PATH->Name = L"TXTBX_PATH";
+			this->TXTBX_PATH->Size = System::Drawing::Size(547, 20);
+			this->TXTBX_PATH->TabIndex = 0;
+			// 
 			// BTN_GO
 			// 
-			this->BTN_GO->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->BTN_GO->Location = System::Drawing::Point(283, 3);
+			this->BTN_GO->Location = System::Drawing::Point(679, 11);
 			this->BTN_GO->Name = L"BTN_GO";
-			this->BTN_GO->Size = System::Drawing::Size(45, 18);
+			this->BTN_GO->Size = System::Drawing::Size(36, 23);
 			this->BTN_GO->TabIndex = 1;
 			this->BTN_GO->Text = L"GO";
 			this->BTN_GO->UseVisualStyleBackColor = true;
@@ -132,13 +136,26 @@ namespace PFSHDDManager {
 			// 
 			// BTN_BACK
 			// 
-			this->BTN_BACK->Location = System::Drawing::Point(334, 3);
+			this->BTN_BACK->Location = System::Drawing::Point(721, 10);
 			this->BTN_BACK->Name = L"BTN_BACK";
-			this->BTN_BACK->Size = System::Drawing::Size(45, 18);
+			this->BTN_BACK->Size = System::Drawing::Size(51, 23);
 			this->BTN_BACK->TabIndex = 1;
 			this->BTN_BACK->Text = L"BACK";
 			this->BTN_BACK->UseVisualStyleBackColor = true;
 			this->BTN_BACK->Click += gcnew System::EventHandler(this, &MainForm::BTN_BACK_Click);
+			// 
+			// PATH_VIEW
+			// 
+			this->PATH_VIEW->AllowDrop = true;
+			this->PATH_VIEW->ContextMenuStrip = this->PATH_VIEW_CONTEXT;
+			this->PATH_VIEW->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
+			this->PATH_VIEW->Location = System::Drawing::Point(13, 39);
+			this->PATH_VIEW->Name = L"PATH_VIEW";
+			this->PATH_VIEW->Size = System::Drawing::Size(759, 510);
+			this->PATH_VIEW->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
+			this->PATH_VIEW->TabIndex = 2;
+			this->PATH_VIEW->UseCompatibleStateImageBehavior = false;
+			this->PATH_VIEW->DoubleClick += gcnew System::EventHandler(this, &MainForm::PATH_VIEW_DoubleClick);
 			// 
 			// PATH_VIEW_CONTEXT
 			// 
@@ -204,84 +221,60 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->tableLayoutPanel1->ColumnCount = 2;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				34.67023F)));
+				59.63162F)));
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				65.32977F)));
-			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel2, 0, 0);
+				40.36838F)));
 			this->tableLayoutPanel1->Controls->Add(this->button1, 1, 0);
+			this->tableLayoutPanel1->Controls->Add(this->DRIVE_LTR, 0, 0);
+			this->tableLayoutPanel1->Controls->Add(this->richTextBox1, 1, 1);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 2;
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 30)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(1122, 574);
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 11.67247F)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 88.32753F)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(1303, 574);
 			this->tableLayoutPanel1->TabIndex = 3;
-			this->tableLayoutPanel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::tableLayoutPanel1_Paint);
 			// 
-			// tableLayoutPanel2
+			// button1
 			// 
-			this->tableLayoutPanel2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-				| System::Windows::Forms::AnchorStyles::Left)
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->tableLayoutPanel2->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-			this->tableLayoutPanel2->ColumnCount = 4;
-			this->tableLayoutPanel2->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				51)));
-			this->tableLayoutPanel2->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				100)));
-			this->tableLayoutPanel2->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				51)));
-			this->tableLayoutPanel2->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				51)));
-			this->tableLayoutPanel2->Controls->Add(this->DRIVE_LTR, 0, 0);
-			this->tableLayoutPanel2->Controls->Add(this->BTN_BACK, 3, 0);
-			this->tableLayoutPanel2->Controls->Add(this->TXTBX_PATH, 1, 0);
-			this->tableLayoutPanel2->Controls->Add(this->BTN_GO, 2, 0);
-			this->tableLayoutPanel2->GrowStyle = System::Windows::Forms::TableLayoutPanelGrowStyle::FixedSize;
-			this->tableLayoutPanel2->Location = System::Drawing::Point(3, 3);
-			this->tableLayoutPanel2->Name = L"tableLayoutPanel2";
-			this->tableLayoutPanel2->RowCount = 1;
-			this->tableLayoutPanel2->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-			this->tableLayoutPanel2->Size = System::Drawing::Size(382, 24);
-			this->tableLayoutPanel2->TabIndex = 5;
+			this->button1->Location = System::Drawing::Point(779, 3);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(70, 60);
+			this->button1->TabIndex = 4;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
 			// 
 			// DRIVE_LTR
 			// 
-			this->DRIVE_LTR->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->DRIVE_LTR->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->DRIVE_LTR->FormattingEnabled = true;
 			this->DRIVE_LTR->Location = System::Drawing::Point(3, 3);
 			this->DRIVE_LTR->MaxDropDownItems = 20;
 			this->DRIVE_LTR->Name = L"DRIVE_LTR";
-			this->DRIVE_LTR->Size = System::Drawing::Size(45, 21);
+			this->DRIVE_LTR->Size = System::Drawing::Size(44, 21);
 			this->DRIVE_LTR->TabIndex = 0;
 			this->DRIVE_LTR->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::DRIVE_LTR_SelectedIndexChanged);
 			// 
-			// TXTBX_PATH
+			// richTextBox1
 			// 
-			this->TXTBX_PATH->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->TXTBX_PATH->Location = System::Drawing::Point(54, 3);
-			this->TXTBX_PATH->Name = L"TXTBX_PATH";
-			this->TXTBX_PATH->Size = System::Drawing::Size(223, 20);
-			this->TXTBX_PATH->TabIndex = 0;
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(391, 3);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(70, 24);
-			this->button1->TabIndex = 4;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
+			this->richTextBox1->Location = System::Drawing::Point(779, 69);
+			this->richTextBox1->Name = L"richTextBox1";
+			this->richTextBox1->Size = System::Drawing::Size(512, 455);
+			this->richTextBox1->TabIndex = 5;
+			this->richTextBox1->Text = L"";
 			// 
 			// MainForm
 			// 
 			this->AcceptButton = this->BTN_GO;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1122, 574);
+			this->ClientSize = System::Drawing::Size(1303, 574);
+			this->Controls->Add(this->PATH_VIEW);
+			this->Controls->Add(this->BTN_BACK);
+			this->Controls->Add(this->BTN_GO);
+			this->Controls->Add(this->TXTBX_PATH);
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"MainForm";
@@ -290,8 +283,6 @@ namespace PFSHDDManager {
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->PATH_VIEW_CONTEXT->ResumeLayout(false);
 			this->tableLayoutPanel1->ResumeLayout(false);
-			this->tableLayoutPanel2->ResumeLayout(false);
-			this->tableLayoutPanel2->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -314,7 +305,5 @@ namespace PFSHDDManager {
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void StartProcess(System::String^ fileName, System::String^ arguments);
 	//private: System::Void log();
-	private: System::Void tableLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
-	}
-};
+	};
 }

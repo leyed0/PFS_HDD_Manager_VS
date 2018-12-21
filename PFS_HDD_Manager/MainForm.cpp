@@ -119,8 +119,8 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 
 System::Void PFSHDDManager::MainForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
 	System::Diagnostics::Process^ PFS = gcnew System::Diagnostics::Process;
-	//PFS->StartInfo->FileName = "shell\\hdl_dump_090.exe";
-	PFS->StartInfo->FileName = "shell\\pfsshell.exe";
+	PFS->StartInfo->FileName = "shell\\hdl_dump_090.exe";
+	PFS->StartInfo->Arguments = "query";
 	//PFS->StartInfo->FileName = "cmd";
 	PFS->StartInfo->CreateNoWindow = true;
 	PFS->StartInfo->ErrorDialog = false;
@@ -130,23 +130,8 @@ System::Void PFSHDDManager::MainForm::button1_Click(System::Object^  sender, Sys
 	PFS->StartInfo->RedirectStandardOutput = true;
 	PFS->EnableRaisingEvents = true;
 	PFS->Start();
-	PFS->StandardInput->WriteLine("device hdd2:");
-	PFS->StandardInput->WriteLine("mkpart teste2 128");
-	PFS->StandardInput->WriteLine("mount +OPL");
-	PFS->StandardInput->WriteLine("mkdir APPS");
-	PFS->StandardInput->WriteLine("mkdir ART");
-	PFS->StandardInput->WriteLine("mkdir CD");
-	PFS->StandardInput->WriteLine("mkdir CFG");
-	PFS->StandardInput->WriteLine("mkdir CHT");
-	PFS->StandardInput->WriteLine("mkdir DVD");
-	PFS->StandardInput->WriteLine("mkdir POPS");
-	PFS->StandardInput->WriteLine("mkdir VMC");
-	PFS->StandardInput->WriteLine("put pesquisa.png");
-	PFS->StandardInput->WriteLine("ls");
-	PFS->StandardInput->WriteLine("lcd");
-
-	PFS->StandardInput->WriteLine("exit");
-	richTextBox1->Text += PFS->StandardOutput->ReadToEnd();
+	String^ output = PFS->StandardOutput->ReadToEnd();
+	richTextBox1->Text = output;
 }
 
 
