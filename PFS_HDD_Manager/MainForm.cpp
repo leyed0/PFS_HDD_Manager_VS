@@ -17,6 +17,7 @@ void main(array<String^>^ args) {
 
 System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 {
+	TXTBX_PATH->Text = Path;
 	System::Windows::Forms::ImageList^  IMAGELIST;
 	if (PATH_VIEW->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
 	if (PATH_VIEW->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
@@ -26,7 +27,6 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 	PATH_VIEW->Clear();
 	History.Push(Path);
 	try {
-		int j = 20;
 		array<String^>^ dir = IO::Directory::GetDirectories(Path);
 		array<String^>^ file = IO::Directory::GetFiles(Path);
 		for (int i = 0; i < dir->Length; i++) {
@@ -36,19 +36,16 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 			PATH_VIEW->Items->Add(file[i]->Substring(file[i]->LastIndexOf("\\") + 1), IMAGELIST->Images->Count - 2);
 		}
 	}
-	catch (int err)
+	catch (System::IO::IOException^ err)
 	{
-		err += 1;
+		return;
 	}
 	return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, System::EventArgs ^ e)
 {
-	PFSShell = gcnew System::Diagnostics::Process;
-	HDLDump = gcnew System::Diagnostics::Process;
-	PFSShell->StartInfo->FileName = "shell\\pfsshell.exe";
-	HDLDump->StartInfo->FileName = "shell\\HDLDump.exe";
+	SetProcesses();
 	DRIVE_LTR->Items->AddRange(System::IO::Directory::GetLogicalDrives());
 	Path = System::IO::Directory::GetLogicalDrives()[1];
 	ViewPath(Path);
@@ -57,9 +54,8 @@ System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, Sys
 
 System::Void PFSHDDManager::MainForm::PATH_VIEW_DoubleClick(System::Object ^ sender, System::EventArgs ^ e)
 {
-	if (Path->EndsWith("\\"))Path = Path->Substring(0, Path->Length - 1);
+	if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
 	Path = Path + "\\" + PATH_VIEW->SelectedItems[0]->Text;
-	TXTBX_PATH->Text = Path;
 	ViewPath(Path);
 	return System::Void();
 }
@@ -120,35 +116,36 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 	return System::Void();
 }
 
-
 System::Void PFSHDDManager::MainForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
+	richTextBox1->Text = HDD.GetOutput();
+
 	//PFS->StartInfo->FileName = "shell\\hdl_dump_090.exe";
 	//PFS->StartInfo->FileName = "cmd";
-	PFSShell->StartInfo->CreateNoWindow = true;
-	PFSShell->StartInfo->ErrorDialog = false;
-	PFSShell->StartInfo->UseShellExecute = false;
-	PFSShell->StartInfo->RedirectStandardError = true;
-	PFSShell->StartInfo->RedirectStandardInput = true;
-	PFSShell->StartInfo->RedirectStandardOutput = true;
-	PFSShell->EnableRaisingEvents = true;
-	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("device hdd2:");
-	PFSShell->StandardInput->WriteLine("mkpart teste2 128");
-	PFSShell->StandardInput->WriteLine("mount +OPL");
-	PFSShell->StandardInput->WriteLine("mkdir APPS");
-	PFSShell->StandardInput->WriteLine("mkdir ART");
-	PFSShell->StandardInput->WriteLine("mkdir CD");
-	PFSShell->StandardInput->WriteLine("mkdir CFG");
-	PFSShell->StandardInput->WriteLine("mkdir CHT");
-	PFSShell->StandardInput->WriteLine("mkdir DVD");
-	PFSShell->StandardInput->WriteLine("mkdir POPS");
-	PFSShell->StandardInput->WriteLine("mkdir VMC");
-	PFSShell->StandardInput->WriteLine("put pesquisa.png");
-	PFSShell->StandardInput->WriteLine("ls");
-	PFSShell->StandardInput->WriteLine("lcd");
+	//PFSShell->StartInfo->CreateNoWindow = true;
+	//PFSShell->StartInfo->ErrorDialog = false;
+	//PFSShell->StartInfo->UseShellExecute = false;
+	//PFSShell->StartInfo->RedirectStandardError = true;
+	//PFSShell->StartInfo->RedirectStandardInput = true;
+	//PFSShell->StartInfo->RedirectStandardOutput = true;
+	//PFSShell->EnableRaisingEvents = true;
+	//PFSShell->Start();
+	//PFSShell->StandardInput->WriteLine("device hdd2:");
+	//PFSShell->StandardInput->WriteLine("mkpart teste2 128");
+	//PFSShell->StandardInput->WriteLine("mount +OPL");
+	//PFSShell->StandardInput->WriteLine("mkdir APPS");
+	//PFSShell->StandardInput->WriteLine("mkdir ART");
+	//PFSShell->StandardInput->WriteLine("mkdir CD");
+	//PFSShell->StandardInput->WriteLine("mkdir CFG");
+	//PFSShell->StandardInput->WriteLine("mkdir CHT");
+	//PFSShell->StandardInput->WriteLine("mkdir DVD");
+	//PFSShell->StandardInput->WriteLine("mkdir POPS");
+	//PFSShell->StandardInput->WriteLine("mkdir VMC");
+	//PFSShell->StandardInput->WriteLine("put pesquisa.png");
+	//PFSShell->StandardInput->WriteLine("ls");
+	//PFSShell->StandardInput->WriteLine("lcd");
 
-	PFSShell->StandardInput->WriteLine("exit");
-	richTextBox1->Text += PFSShell->StandardOutput->ReadToEnd();
+	//PFSShell->StandardInput->WriteLine("exit");
+	//richTextBox1->Text += PFSShell->StandardOutput->ReadToEnd();
 }
 
 
@@ -177,6 +174,36 @@ System::Void PFSHDDManager::MainForm::StartProcess(System::String^ fileName, Sys
 	printf("%s", result);
 }*/
 
-System::Void PFSHDDManager::MainForm::ScanHdds() {
+System::Void PFSHDDManager::MainForm::HDLScanHdds() {
+	HDLDump->StartInfo->Arguments = "query";
+	HDLDump->Start();
+}
 
+
+System::Void PFSHDDManager::MainForm::SetProcesses() {
+	PFSShell = gcnew System::Diagnostics::Process;
+	PFSShell->StartInfo->FileName = "shell\\pfsshell.exe";
+	PFSShell->StartInfo->CreateNoWindow = true;
+	PFSShell->StartInfo->ErrorDialog = false;
+	PFSShell->StartInfo->UseShellExecute = false;
+	PFSShell->StartInfo->RedirectStandardError = true;
+	PFSShell->StartInfo->RedirectStandardInput = true;
+	PFSShell->StartInfo->RedirectStandardOutput = true;
+	PFSShell->EnableRaisingEvents = true;
+
+
+	HDLDump = gcnew System::Diagnostics::Process;
+	HDLDump->StartInfo->FileName = "shell\\HDLDump.exe";
+	HDLDump->StartInfo->CreateNoWindow = true;
+	HDLDump->StartInfo->ErrorDialog = false;
+	HDLDump->StartInfo->UseShellExecute = false;
+	HDLDump->StartInfo->RedirectStandardError = true;
+	HDLDump->StartInfo->RedirectStandardInput = true;
+	HDLDump->StartInfo->RedirectStandardOutput = true;
+	HDLDump->EnableRaisingEvents = true;
+}
+
+
+System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e) {
+	ViewPath(DRIVE_LTR->Text);
 }
