@@ -47,12 +47,10 @@ Void PS2HDD::ListDevices() {
 				tmpstr = tmp->Name->Substring(tmp->Name->IndexOf(" ") + 1);
 				tmpstr->Remove(tmpstr->IndexOf("MB") - 1);
 				tmpstr = tmpstr->Substring(0, tmpstr->IndexOf(" "));
-				//if(tmp->Size != -1) tmp->Size = int::Parse(0);
-				//tmp->Name = tmp->Name->Substring(tmp->Name->IndexOf(":") + 1);
-				//GetTOC(tmp);
 				tmp->Size = Int32::Parse(tmpstr);
 				tmp->Name = tmp->Name->Substring(0, tmp->Name->IndexOf(":") + 1);
-				if (tmp->Name != "Hard drives:") devices.Add(tmp);
+				if(tmp->PS2) GetTOC(tmp);
+				devices.Add(tmp);
 			}
 		}
 	}
@@ -60,15 +58,16 @@ Void PS2HDD::ListDevices() {
 
 
 Void PS2HDD::GetTOC(Device^ dev) {
+	//PS2HDD();
 	HDLDump->StartInfo->Arguments = "toc " + dev->Name;
 	HDLDump->Start();
 	String^ tmp = HDLDump->StandardOutput->ReadToEnd();
 
-	StringReader = gcnew System::IO::StringReader(output);
-	StringReader->ReadLine();
+	System::IO::StringReader^ tmpStringReader = gcnew System::IO::StringReader(tmp);
+	tmpStringReader->ReadLine();
 	do {
-		dev->Partition.Add(StringReader->ReadLine());
-	} while (!dev->Partition.Contains("Total slice"));
+		dev->Partition.Add(tmpStringReader->ReadLine());
+	} while (!dev->Partition[dev->Partition.Count-1]->Contains("Total slice"));
 }
 
 

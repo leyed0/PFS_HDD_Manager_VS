@@ -12,16 +12,14 @@ private:
 		System::String^ Name;
 		System::Int16 Size;
 		System::Collections::Generic::List <Partition_Part^> Parts;
+		System::Boolean CDVD;
+		System::String^ Startup;
 	};
 	ref struct Device {
 		System::String^ Name;
 		System::Int32 Size, Used;
 		System::Boolean PS2;
 		System::Collections::Generic::List <String^> Partition;
-	};
-	ref struct Game_Partition:Partition {
-		System::Boolean CDVD;
-		System::String^ Startup;
 	};
 	System::Collections::Generic::List <Device^> devices;
 	String^ output;
