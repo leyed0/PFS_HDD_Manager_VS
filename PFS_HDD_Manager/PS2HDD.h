@@ -4,15 +4,24 @@ using namespace System;
 
 ref class PS2HDD
 {
-public:
-	PS2HDD();
-	Void ListDevices(); 
-	System::String^ GetOutput();
 private:
+	ref struct Partition_Part {
+		System::Int16 Sector, Size;
+	};
+	ref struct Partition {
+		System::String^ Name;
+		System::Int16 Size;
+		System::Collections::Generic::List <Partition_Part^> Parts;
+	};
 	ref struct Device {
 		System::String^ Name;
-		System::Int16^ Size;
+		System::Int32 Size, Used;
 		System::Boolean PS2;
+		System::Collections::Generic::List <String^> Partition;
+	};
+	ref struct Game_Partition:Partition {
+		System::Boolean CDVD;
+		System::String^ Startup;
 	};
 	System::Collections::Generic::List <Device^> devices;
 	String^ output;
@@ -20,4 +29,10 @@ private:
 	System::Diagnostics::Process^ PFSShell;
 	System::Diagnostics::Process^ HDLDump;
 	System::IO::StringReader^ StringReader;
+public:
+	PS2HDD();
+	Void ListDevices(); 
+	System::String^ GetOutput();
+	Void GetTOC(Device^);
+
 };

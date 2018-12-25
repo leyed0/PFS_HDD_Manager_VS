@@ -14,7 +14,6 @@ PS2HDD::PS2HDD()
 	PFSShell->StartInfo->RedirectStandardOutput = true;
 	PFSShell->EnableRaisingEvents = true;
 
-
 	HDLDump = gcnew System::Diagnostics::Process;
 	HDLDump->StartInfo->FileName = "shell\\hdl_dump.exe";
 	HDLDump->StartInfo->CreateNoWindow = true;
@@ -24,7 +23,6 @@ PS2HDD::PS2HDD()
 	HDLDump->StartInfo->RedirectStandardInput = true;
 	HDLDump->StartInfo->RedirectStandardOutput = true;
 	HDLDump->EnableRaisingEvents = true;
-
 }
 
 Void PS2HDD::ListDevices() {
@@ -36,17 +34,43 @@ Void PS2HDD::ListDevices() {
 	while (true) {
 		tmp = gcnew Device;
 		tmp->Name = StringReader->ReadLine();
+				if (tmp->Name->Contains("Optical")) break;
+		if (tmp->Name->Contains("hdd")) {
+			if (tmp->Name->Contains("MB")) {
+				tmp->Name = tmp->Name->Substring(tmp->Name->LastIndexOf("	") + 1);
 
+				if (tmp->Name->Contains("formatted Playstation 2")) tmp->PS2 = true;
+				else tmp->PS2 = false;
+				if (!tmp->Name->Contains("MB")) tmp->Size = -1;
 
-		if (tmp->Name->Contains("formatted Playstation 2")) tmp->PS2 = true;
-		else tmp->PS2 = false;
-		if (!tmp->Name->Contains("MB")) tmp->Size = nullptr;
-
-
-		if (tmp->Name->Contains("Optical")) break;
-		if(tmp->Name!="" && tmp->Name != "Hard drives:") devices.Add(tmp);
+				String^ tmpstr;
+				tmpstr = tmp->Name->Substring(tmp->Name->IndexOf(" ") + 1);
+				tmpstr->Remove(tmpstr->IndexOf("MB") - 1);
+				tmpstr = tmpstr->Substring(0, tmpstr->IndexOf(" "));
+				//if(tmp->Size != -1) tmp->Size = int::Parse(0);
+				//tmp->Name = tmp->Name->Substring(tmp->Name->IndexOf(":") + 1);
+				//GetTOC(tmp);
+				tmp->Size = Int32::Parse(tmpstr);
+				tmp->Name = tmp->Name->Substring(0, tmp->Name->IndexOf(":") + 1);
+				if (tmp->Name != "Hard drives:") devices.Add(tmp);
+			}
+		}
 	}
 }
+
+
+Void PS2HDD::GetTOC(Device^ dev) {
+	HDLDump->StartInfo->Arguments = "toc " + dev->Name;
+	HDLDump->Start();
+	String^ tmp = HDLDump->StandardOutput->ReadToEnd();
+
+	StringReader = gcnew System::IO::StringReader(output);
+	StringReader->ReadLine();
+	do {
+		dev->Partition.Add(StringReader->ReadLine());
+	} while (!dev->Partition.Contains("Total slice"));
+}
+
 
 System::String^ PS2HDD::GetOutput() {
 	ListDevices();
