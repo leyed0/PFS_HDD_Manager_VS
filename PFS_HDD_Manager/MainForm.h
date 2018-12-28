@@ -37,11 +37,11 @@ namespace PFSHDDManager {
 		}
 	private: System::Diagnostics::Process^ PFSShell;
 	private: System::Diagnostics::Process^ HDLDump;
-			 PS2HDD HDD;
+	private: PS2HDD HDD;
 	//BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
-	private: System::Collections::Generic::Stack <System::String^>  History;
+	private: System::Collections::Generic::Stack <System::String^>  ^History;
 	private: System::Windows::Forms::ImageList^  PATH_VIEW_ICONS_LARGE;
 	private: System::Windows::Forms::ContextMenuStrip^  PATH_VIEW_CONTEXT;
 	private: System::Windows::Forms::ToolStripMenuItem^  exibiçãoToolStripMenuItem;
@@ -67,15 +67,9 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::Button^  BTN_BACK;
 	private: System::Windows::Forms::ListView^  listView1;
 	private: System::Windows::Forms::TabControl^  tabControl1;
-	private: System::Windows::Forms::TabPage^  PFSShellTab;
-	private: System::Windows::Forms::TabPage^  HDLDumpTab;
-
-
-
-
-
-
-	protected:
+	private: System::Windows::Forms::TabPage^  FileManagerTab;
+	private: System::Windows::Forms::TabPage^  PartitionManagerTab;
+	private: System::Boolean debug=false;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -118,14 +112,14 @@ namespace PFSHDDManager {
 			this->TXTBX_PATH = (gcnew System::Windows::Forms::TextBox());
 			this->BTN_BACK = (gcnew System::Windows::Forms::Button());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
-			this->PFSShellTab = (gcnew System::Windows::Forms::TabPage());
-			this->HDLDumpTab = (gcnew System::Windows::Forms::TabPage());
+			this->FileManagerTab = (gcnew System::Windows::Forms::TabPage());
+			this->PartitionManagerTab = (gcnew System::Windows::Forms::TabPage());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
 			this->tableLayoutPanel3->SuspendLayout();
 			this->tabControl1->SuspendLayout();
-			this->PFSShellTab->SuspendLayout();
+			this->FileManagerTab->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// PATH_VIEW_ICONS_LARGE
@@ -196,15 +190,15 @@ namespace PFSHDDManager {
 			// richTextBox1
 			// 
 			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->richTextBox1->Location = System::Drawing::Point(941, 36);
+			this->richTextBox1->Location = System::Drawing::Point(891, 36);
 			this->richTextBox1->Name = L"richTextBox1";
-			this->richTextBox1->Size = System::Drawing::Size(345, 503);
+			this->richTextBox1->Size = System::Drawing::Size(395, 503);
 			this->richTextBox1->TabIndex = 5;
 			this->richTextBox1->Text = L"";
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(941, 3);
+			this->button1->Location = System::Drawing::Point(891, 3);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(70, 27);
 			this->button1->TabIndex = 4;
@@ -220,7 +214,7 @@ namespace PFSHDDManager {
 			this->PATH_VIEW->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
 			this->PATH_VIEW->Location = System::Drawing::Point(3, 36);
 			this->PATH_VIEW->Name = L"PATH_VIEW";
-			this->PATH_VIEW->Size = System::Drawing::Size(463, 503);
+			this->PATH_VIEW->Size = System::Drawing::Size(438, 503);
 			this->PATH_VIEW->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
 			this->PATH_VIEW->TabIndex = 2;
 			this->PATH_VIEW->UseCompatibleStateImageBehavior = false;
@@ -242,12 +236,12 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel2->Controls->Add(this->TXTBX_PATH2, 1, 0);
 			this->tableLayoutPanel2->Controls->Add(this->BTN_BACK2, 3, 0);
 			this->tableLayoutPanel2->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->tableLayoutPanel2->Location = System::Drawing::Point(472, 3);
+			this->tableLayoutPanel2->Location = System::Drawing::Point(447, 3);
 			this->tableLayoutPanel2->Name = L"tableLayoutPanel2";
 			this->tableLayoutPanel2->RowCount = 1;
 			this->tableLayoutPanel2->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
 			this->tableLayoutPanel2->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
-			this->tableLayoutPanel2->Size = System::Drawing::Size(463, 27);
+			this->tableLayoutPanel2->Size = System::Drawing::Size(438, 27);
 			this->tableLayoutPanel2->TabIndex = 4;
 			// 
 			// DRIVE_LTR2
@@ -265,7 +259,7 @@ namespace PFSHDDManager {
 			// BTN_GO2
 			// 
 			this->BTN_GO2->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_GO2->Location = System::Drawing::Point(356, 3);
+			this->BTN_GO2->Location = System::Drawing::Point(331, 3);
 			this->BTN_GO2->Name = L"BTN_GO2";
 			this->BTN_GO2->Size = System::Drawing::Size(49, 20);
 			this->BTN_GO2->TabIndex = 1;
@@ -277,13 +271,13 @@ namespace PFSHDDManager {
 			this->TXTBX_PATH2->Dock = System::Windows::Forms::DockStyle::Top;
 			this->TXTBX_PATH2->Location = System::Drawing::Point(58, 3);
 			this->TXTBX_PATH2->Name = L"TXTBX_PATH2";
-			this->TXTBX_PATH2->Size = System::Drawing::Size(292, 20);
+			this->TXTBX_PATH2->Size = System::Drawing::Size(267, 20);
 			this->TXTBX_PATH2->TabIndex = 0;
 			// 
 			// BTN_BACK2
 			// 
 			this->BTN_BACK2->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_BACK2->Location = System::Drawing::Point(411, 3);
+			this->BTN_BACK2->Location = System::Drawing::Point(386, 3);
 			this->BTN_BACK2->Name = L"BTN_BACK2";
 			this->BTN_BACK2->Size = System::Drawing::Size(49, 20);
 			this->BTN_BACK2->TabIndex = 1;
@@ -301,7 +295,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
 				50)));
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				351)));
+				401)));
 			this->tableLayoutPanel1->Controls->Add(this->listView1, 0, 1);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel3, 0, 0);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel2, 0, 0);
@@ -324,9 +318,9 @@ namespace PFSHDDManager {
 			this->listView1->ContextMenuStrip = this->PATH_VIEW_CONTEXT;
 			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->listView1->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
-			this->listView1->Location = System::Drawing::Point(472, 36);
+			this->listView1->Location = System::Drawing::Point(447, 36);
 			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(463, 503);
+			this->listView1->Size = System::Drawing::Size(438, 503);
 			this->listView1->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
 			this->listView1->TabIndex = 7;
 			this->listView1->UseCompatibleStateImageBehavior = false;
@@ -352,7 +346,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel3->RowCount = 1;
 			this->tableLayoutPanel3->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
 			this->tableLayoutPanel3->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
-			this->tableLayoutPanel3->Size = System::Drawing::Size(463, 27);
+			this->tableLayoutPanel3->Size = System::Drawing::Size(438, 27);
 			this->tableLayoutPanel3->TabIndex = 6;
 			// 
 			// DRIVE_LTR
@@ -370,7 +364,7 @@ namespace PFSHDDManager {
 			// BTN_GO
 			// 
 			this->BTN_GO->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_GO->Location = System::Drawing::Point(356, 3);
+			this->BTN_GO->Location = System::Drawing::Point(331, 3);
 			this->BTN_GO->Name = L"BTN_GO";
 			this->BTN_GO->Size = System::Drawing::Size(49, 20);
 			this->BTN_GO->TabIndex = 1;
@@ -383,13 +377,14 @@ namespace PFSHDDManager {
 			this->TXTBX_PATH->Dock = System::Windows::Forms::DockStyle::Top;
 			this->TXTBX_PATH->Location = System::Drawing::Point(58, 3);
 			this->TXTBX_PATH->Name = L"TXTBX_PATH";
-			this->TXTBX_PATH->Size = System::Drawing::Size(292, 20);
+			this->TXTBX_PATH->Size = System::Drawing::Size(267, 20);
 			this->TXTBX_PATH->TabIndex = 0;
+			this->TXTBX_PATH->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::TXTBX_PATH_KeyPress);
 			// 
 			// BTN_BACK
 			// 
 			this->BTN_BACK->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_BACK->Location = System::Drawing::Point(411, 3);
+			this->BTN_BACK->Location = System::Drawing::Point(386, 3);
 			this->BTN_BACK->Name = L"BTN_BACK";
 			this->BTN_BACK->Size = System::Drawing::Size(49, 20);
 			this->BTN_BACK->TabIndex = 1;
@@ -399,8 +394,8 @@ namespace PFSHDDManager {
 			// 
 			// tabControl1
 			// 
-			this->tabControl1->Controls->Add(this->PFSShellTab);
-			this->tabControl1->Controls->Add(this->HDLDumpTab);
+			this->tabControl1->Controls->Add(this->FileManagerTab);
+			this->tabControl1->Controls->Add(this->PartitionManagerTab);
 			this->tabControl1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tabControl1->Location = System::Drawing::Point(0, 0);
 			this->tabControl1->Name = L"tabControl1";
@@ -408,30 +403,29 @@ namespace PFSHDDManager {
 			this->tabControl1->Size = System::Drawing::Size(1303, 574);
 			this->tabControl1->TabIndex = 4;
 			// 
-			// PFSShellTab
+			// FileManagerTab
 			// 
-			this->PFSShellTab->Controls->Add(this->tableLayoutPanel1);
-			this->PFSShellTab->Location = System::Drawing::Point(4, 22);
-			this->PFSShellTab->Name = L"PFSShellTab";
-			this->PFSShellTab->Padding = System::Windows::Forms::Padding(3);
-			this->PFSShellTab->Size = System::Drawing::Size(1295, 548);
-			this->PFSShellTab->TabIndex = 0;
-			this->PFSShellTab->Text = L"PFSShell";
-			this->PFSShellTab->UseVisualStyleBackColor = true;
+			this->FileManagerTab->Controls->Add(this->tableLayoutPanel1);
+			this->FileManagerTab->Location = System::Drawing::Point(4, 22);
+			this->FileManagerTab->Name = L"FileManagerTab";
+			this->FileManagerTab->Padding = System::Windows::Forms::Padding(3);
+			this->FileManagerTab->Size = System::Drawing::Size(1295, 548);
+			this->FileManagerTab->TabIndex = 0;
+			this->FileManagerTab->Text = L"File Manager";
+			this->FileManagerTab->UseVisualStyleBackColor = true;
 			// 
-			// HDLDumpTab
+			// PartitionManagerTab
 			// 
-			this->HDLDumpTab->Location = System::Drawing::Point(4, 22);
-			this->HDLDumpTab->Name = L"HDLDumpTab";
-			this->HDLDumpTab->Padding = System::Windows::Forms::Padding(3);
-			this->HDLDumpTab->Size = System::Drawing::Size(1295, 548);
-			this->HDLDumpTab->TabIndex = 1;
-			this->HDLDumpTab->Text = L"HDLDump";
-			this->HDLDumpTab->UseVisualStyleBackColor = true;
+			this->PartitionManagerTab->Location = System::Drawing::Point(4, 22);
+			this->PartitionManagerTab->Name = L"PartitionManagerTab";
+			this->PartitionManagerTab->Padding = System::Windows::Forms::Padding(3);
+			this->PartitionManagerTab->Size = System::Drawing::Size(1295, 548);
+			this->PartitionManagerTab->TabIndex = 1;
+			this->PartitionManagerTab->Text = L"Partition Manager";
+			this->PartitionManagerTab->UseVisualStyleBackColor = true;
 			// 
 			// MainForm
 			// 
-			this->AcceptButton = this->BTN_GO2;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1303, 574);
@@ -439,7 +433,7 @@ namespace PFSHDDManager {
 			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"MainForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			this->Text = L"MainForm";
+			this->Text = L"PFS HDD Manager by Leyed";
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->PATH_VIEW_CONTEXT->ResumeLayout(false);
 			this->tableLayoutPanel2->ResumeLayout(false);
@@ -448,8 +442,8 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel3->ResumeLayout(false);
 			this->tableLayoutPanel3->PerformLayout();
 			this->tabControl1->ResumeLayout(false);
-			this->PFSShellTab->ResumeLayout(false);
-			this->PFSShellTab->PerformLayout();
+			this->FileManagerTab->ResumeLayout(false);
+			this->FileManagerTab->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
@@ -470,9 +464,9 @@ namespace PFSHDDManager {
 	private: System::Void StartProcess(System::String^ fileName, System::String^ arguments);
 	private: System::Void HDLScanHdds();
 	private: System::Void SetProcesses();
-	//private: System::Void log();
 	private: System::Void DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void tableLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 }
+private: System::Void TXTBX_PATH_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 };
 }

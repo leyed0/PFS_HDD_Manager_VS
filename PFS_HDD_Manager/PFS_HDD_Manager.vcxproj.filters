@@ -31,7 +31,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shell\hdl_dump_090.exe" />
     <None Include="shell\libapa.dll" />
     <None Include="shell\libfakeps2sdk.dll" />
     <None Include="shell\libiomanX.dll" />
@@ -50,6 +49,7 @@
     <None Include="shell\hello.bat">
       <Filter>Arquivos de Origem</Filter>
     </None>
+    <None Include="shell\hdl_dump.exe" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ICONS\file.png">

@@ -14,7 +14,6 @@ void main(array<String^>^ args) {
 }
 
 
-
 System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 {
 	TXTBX_PATH->Text = Path;
@@ -25,7 +24,7 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 	Path = path;
 	TXTBX_PATH->Text = Path;
 	PATH_VIEW->Clear();
-	History.Push(Path);
+	History->Push(Path);
 	try {
 		array<String^>^ dir = IO::Directory::GetDirectories(Path);
 		array<String^>^ file = IO::Directory::GetFiles(Path);
@@ -45,6 +44,7 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 
 System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, System::EventArgs ^ e)
 {
+	History = gcnew System::Collections::Generic::Stack <System::String^>;
 	SetProcesses();
 	DRIVE_LTR->Items->AddRange(System::IO::Directory::GetLogicalDrives());
 	Path = System::IO::Directory::GetLogicalDrives()[1];
@@ -93,17 +93,21 @@ System::Void PFSHDDManager::MainForm::gradeToolStripMenuItem_Click(System::Objec
 System::Void PFSHDDManager::MainForm::BTN_GO_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	Path = TXTBX_PATH->Text;
-	if (Path == History.Peek()) History.Pop();
+	if (Path == History->Peek()) History->Pop();
 	ViewPath(Path);
 	return System::Void();
+}
+
+System::Void PFSHDDManager::MainForm::TXTBX_PATH_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+	if (e->KeyChar == '\r') BTN_GO_Click(sender, e);
 }
 
 System::Void PFSHDDManager::MainForm::BTN_BACK_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	try {
-		if (History.Count <= 1) return;
-		if (History.Peek() == Path) History.Pop();
-		ViewPath(History.Pop());
+		if (History->Count <= 1) return;
+		if (History->Peek() == Path) History->Pop();
+		ViewPath(History->Pop());
 		return System::Void();
 	}
 	catch (System::Exception ^error) {

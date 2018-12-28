@@ -23,6 +23,8 @@ PS2HDD::PS2HDD()
 	HDLDump->StartInfo->RedirectStandardInput = true;
 	HDLDump->StartInfo->RedirectStandardOutput = true;
 	HDLDump->EnableRaisingEvents = true;
+
+	devices = gcnew System::Collections::Generic::List <Device^>;
 }
 
 Void PS2HDD::ListDevices() {
@@ -50,7 +52,7 @@ Void PS2HDD::ListDevices() {
 				tmp->Size = Int32::Parse(tmpstr);
 				tmp->Name = tmp->Name->Substring(0, tmp->Name->IndexOf(":") + 1);
 				if(tmp->PS2) GetTOC(tmp);
-				devices.Add(tmp);
+				devices->Add(tmp);
 			}
 		}
 	}
@@ -66,16 +68,35 @@ Void PS2HDD::GetTOC(Device^ dev) {
 	System::IO::StringReader^ tmpStringReader = gcnew System::IO::StringReader(tmp);
 	tmpStringReader->ReadLine();
 	do {
-		dev->Partition.Add(tmpStringReader->ReadLine());
-	} while (!dev->Partition[dev->Partition.Count-1]->Contains("Total slice"));
+		dev->Partition->Add(tmpStringReader->ReadLine());
+	} while (!dev->Partition[dev->Partition->Count-1]->Contains("Total slice"));
 }
 
 
 System::String^ PS2HDD::GetOutput() {
 	ListDevices();
 	String^ tmp;
-	for (int i = 0; i < devices.Count; i++) {
-		tmp += "\n" + devices[i]->Name;
+	for (int i = 0; i < devices->Count; i++) {
+		tmp += "\n" + devices[i]->Name + "\t" + devices[i]->Size;
+		if (devices[i]->PS2) {
+			for (int j=0; j<devices[i]->Partition->Count; j++)
+			{
+				tmp += ("\n\t") + devices[i]->Partition[j];
+			}
+		}
 	}
 	return tmp;
+}
+
+
+Void PS2HDD::GetCDVDInfo(String^ Path) {
+	HDLDump->StartInfo->Arguments = "cdvd_info2 " + Path;
+	HDLDump->Start();
+	return;
+}
+
+Void PS2HDD::GetPartitionInfo(Device^ Dev) {
+	HDLDump->StartInfo->Arguments = "info " + Dev->Name + "\"" + Dev->Partition[0];
+	HDLDump->Start();
+	return;
 }

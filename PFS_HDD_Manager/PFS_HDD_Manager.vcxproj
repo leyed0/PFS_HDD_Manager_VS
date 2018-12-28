@@ -178,7 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="shell\hdl_dump_090.exe" />
+    <None Include="shell\hdl_dump.exe">
+      <DeploymentContent>false</DeploymentContent>
+    </None>
     <None Include="shell\hello.bat" />
     <None Include="shell\libapa.dll" />
     <None Include="shell\libfakeps2sdk.dll" />
