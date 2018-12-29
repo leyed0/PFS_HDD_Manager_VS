@@ -175,8 +175,14 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="PS2HDD.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.gitattributes" />
+    <None Include="..\.gitignore" />
+    <None Include="..\CHANGELOG.md" />
+    <None Include="..\README.md" />
+    <None Include="GIT\PropertySheet.props" />
     <None Include="packages.config" />
     <None Include="shell\hdl_dump.exe">
       <DeploymentContent>false</DeploymentContent>
@@ -199,6 +205,9 @@
     <EmbeddedResource Include="MainForm.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PFS_HDD_Manager.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

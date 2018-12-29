@@ -29,6 +29,9 @@
     <ClInclude Include="PS2HDD.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shell\libapa.dll" />
@@ -50,6 +53,11 @@
       <Filter>Arquivos de Origem</Filter>
     </None>
     <None Include="shell\hdl_dump.exe" />
+    <None Include="..\.gitattributes" />
+    <None Include="..\.gitignore" />
+    <None Include="..\CHANGELOG.md" />
+    <None Include="..\README.md" />
+    <None Include="GIT\PropertySheet.props" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ICONS\file.png">
@@ -63,5 +71,10 @@
     <EmbeddedResource Include="MainForm.resx">
       <Filter>Arquivos de Recurso</Filter>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PFS_HDD_Manager.rc">
+      <Filter>Arquivos de Recurso</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
