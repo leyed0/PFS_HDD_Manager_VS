@@ -70,6 +70,7 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::TabPage^  FileManagerTab;
 	private: System::Windows::Forms::TabPage^  PartitionManagerTab;
 	private: System::Boolean debug=false;
+	private: System::DirectoryServices::DirectoryEntry^  directoryEntry1;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -114,6 +115,7 @@ namespace PFSHDDManager {
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->FileManagerTab = (gcnew System::Windows::Forms::TabPage());
 			this->PartitionManagerTab = (gcnew System::Windows::Forms::TabPage());
+			this->directoryEntry1 = (gcnew System::DirectoryServices::DirectoryEntry());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
@@ -308,6 +310,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->RowCount = 2;
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 33)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 100)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
 			this->tableLayoutPanel1->Size = System::Drawing::Size(1289, 542);
 			this->tableLayoutPanel1->TabIndex = 3;
 			this->tableLayoutPanel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::tableLayoutPanel1_Paint);
@@ -462,8 +465,6 @@ namespace PFSHDDManager {
 	private: System::Void DRIVE_LTR_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void StartProcess(System::String^ fileName, System::String^ arguments);
-	private: System::Void HDLScanHdds();
-	private: System::Void SetProcesses();
 	private: System::Void DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void tableLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 }

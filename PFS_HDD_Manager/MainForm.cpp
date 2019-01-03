@@ -45,9 +45,8 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, System::EventArgs ^ e)
 {
 	History = gcnew System::Collections::Generic::Stack <System::String^>;
-	SetProcesses();
 	DRIVE_LTR->Items->AddRange(System::IO::Directory::GetLogicalDrives());
-	Path = System::IO::Directory::GetLogicalDrives()[1];
+	Path = System::IO::Directory::GetLogicalDrives()[0];
 	ViewPath(Path);
 	return System::Void();
 }
@@ -177,35 +176,6 @@ System::Void PFSHDDManager::MainForm::StartProcess(System::String^ fileName, Sys
 	fclose(fp);
 	printf("%s", result);
 }*/
-
-System::Void PFSHDDManager::MainForm::HDLScanHdds() {
-	HDLDump->StartInfo->Arguments = "query";
-	HDLDump->Start();
-}
-
-
-System::Void PFSHDDManager::MainForm::SetProcesses() {
-	PFSShell = gcnew System::Diagnostics::Process;
-	PFSShell->StartInfo->FileName = "shell\\pfsshell.exe";
-	PFSShell->StartInfo->CreateNoWindow = true;
-	PFSShell->StartInfo->ErrorDialog = false;
-	PFSShell->StartInfo->UseShellExecute = false;
-	PFSShell->StartInfo->RedirectStandardError = true;
-	PFSShell->StartInfo->RedirectStandardInput = true;
-	PFSShell->StartInfo->RedirectStandardOutput = true;
-	PFSShell->EnableRaisingEvents = true;
-
-
-	HDLDump = gcnew System::Diagnostics::Process;
-	HDLDump->StartInfo->FileName = "shell\\HDLDump.exe";
-	HDLDump->StartInfo->CreateNoWindow = true;
-	HDLDump->StartInfo->ErrorDialog = false;
-	HDLDump->StartInfo->UseShellExecute = false;
-	HDLDump->StartInfo->RedirectStandardError = true;
-	HDLDump->StartInfo->RedirectStandardInput = true;
-	HDLDump->StartInfo->RedirectStandardOutput = true;
-	HDLDump->EnableRaisingEvents = true;
-}
 
 
 System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e) {

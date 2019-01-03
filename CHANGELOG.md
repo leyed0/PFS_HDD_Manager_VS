@@ -1,5 +1,23 @@
 V: 0.0.0{
 	Added:
+		
+	
+	Changed:
+		
+
+	Fixed:
+		
+
+	Removed:
+		Functions from mainform:		
+			HDLScanHdds();
+			SetProcesses();
+
+	Todo:
+	read https://semver.org/spec/v2.0.0.html }
+
+V: 0.0.0{
+	Added:
 		Added this Changelog file
 		Added the README file
 		Project`s PS2-HOME thread set-up

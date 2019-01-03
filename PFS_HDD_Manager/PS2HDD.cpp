@@ -98,5 +98,6 @@ Void PS2HDD::GetCDVDInfo(String^ Path) {
 Void PS2HDD::GetPartitionInfo(Device^ Dev) {
 	HDLDump->StartInfo->Arguments = "info " + Dev->Name + "\"" + Dev->Partition[0];
 	HDLDump->Start();
+
 	return;
 }
