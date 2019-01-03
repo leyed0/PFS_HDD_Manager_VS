@@ -1,4 +1,4 @@
-V: 0.4.3.2{
+V0.4.3.2{
 	Added:
 		Filesystem libs
 			classes:
