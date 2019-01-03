@@ -1,9 +1,16 @@
-V: 0.0.0{
+V: 0.4.3.2{
 	Added:
-		
+		Filesystem libs
+			classes:
+				Tree: multiway tree that is gonna manage the folder structure
+				File: the name is self explanatory - Are gonna have the files basic info
+				Filesystem: concatenates Tree and File
 	
 	Changed:
-		
+		MainForm windows title
+		Tabs names
+		Debug button now call Filesystem functions and log them in the RichTextBox bellow
+		README text detailed
 
 	Fixed:
 		
@@ -16,7 +23,7 @@ V: 0.0.0{
 	Todo:
 	read https://semver.org/spec/v2.0.0.html }
 
-V: 0.0.0{
+V: 0.0.0.0{
 	Added:
 		Added this Changelog file
 		Added the README file
@@ -33,7 +40,8 @@ V: 0.0.0{
 		Removed some debug code that is not usable
 
 	Todo:
-	read https://semver.org/spec/v2.0.0.html }
+	read https://semver.org/spec/v2.0.0.html 
+}
 
 	defined versionning:
 	V: X.Y.Z.W
