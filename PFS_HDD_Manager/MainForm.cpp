@@ -48,6 +48,7 @@ System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, Sys
 	DRIVE_LTR->Items->AddRange(System::IO::Directory::GetLogicalDrives());
 	Path = System::IO::Directory::GetLogicalDrives()[0];
 	ViewPath(Path);
+	ListPS2HDD();
 	return System::Void();
 }
 
@@ -122,7 +123,7 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 System::Void PFSHDDManager::MainForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
 	richTextBox1->Text = HDD.GetOutput();
 
-	//PFS->StartInfo->FileName = "shell\\hdl_dump_090.exe";
+	//PFS->StartInfo->FileName = "shell\\1_090.exe";
 	//PFS->StartInfo->FileName = "cmd";
 	//PFSShell->StartInfo->CreateNoWindow = true;
 	//PFSShell->StartInfo->ErrorDialog = false;
@@ -180,4 +181,32 @@ System::Void PFSHDDManager::MainForm::StartProcess(System::String^ fileName, Sys
 
 System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e) {
 	ViewPath(DRIVE_LTR->Text);
+}
+
+System::Void PFSHDDManager::MainForm::BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e) {
+	array<IO::DriveInfo^>^ test = IO::DriveInfo::GetDrives();
+	MessageBox::Show(Convert::ToString( test->Length));
+	//for each (IO::DriveInfo^ var in test)
+	//{
+	//	DRIVE_LTR2->Items->Add(var->Name);
+	//	//HDD
+	//}
+}
+
+System::Void PFSHDDManager::MainForm::ListPS2HDD() {
+	HDD.ListDevices();
+	for each (PS2HDD::Device^ var in HDD.devices)
+	{
+		DRIVE_LTR2->Items->Add(var->Name);
+	}
+}
+
+System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
+{
+	if (!HDD.GetDevName(DRIVE_LTR2->Text)->PS2) {
+		if (MessageBox::Show("The selected device is not in the PFS filesystem. Set to PFS system?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK);
+		HDD.InitDev(DRIVE_LTR2->Text);
+	}
+	else
+		return;
 }

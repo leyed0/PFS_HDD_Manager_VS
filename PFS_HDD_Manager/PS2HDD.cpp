@@ -26,8 +26,8 @@ PS2HDD::PS2HDD()
 
 	devices = gcnew System::Collections::Generic::List <Device^>;
 }
-
-Void PS2HDD::ListDevices() {
+void PS2HDD::ListDevices() {
+	array<String^>^ ret;
 	HDLDump->StartInfo->Arguments = "query";
 	HDLDump->Start();
 	output = HDLDump->StandardOutput->ReadToEnd();
@@ -86,6 +86,24 @@ System::String^ PS2HDD::GetOutput() {
 		}
 	}
 	return tmp;
+}
+
+PS2HDD::Device^ PS2HDD::GetDevName(String^ Name)
+{
+	for each (Device^  var in devices)
+	{
+		if (var->Name == Name)
+			return var;
+	}
+	return nullptr;
+}
+
+void PS2HDD::InitDev(String ^ Name)
+{
+	HDLDump->StartInfo->Arguments = "initialize " + Name;
+	HDLDump->Start();
+	devices->Clear();
+	ListDevices();
 }
 
 

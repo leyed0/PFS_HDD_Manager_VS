@@ -65,7 +65,8 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::Button^  BTN_GO;
 	private: System::Windows::Forms::TextBox^  TXTBX_PATH;
 	private: System::Windows::Forms::Button^  BTN_BACK;
-	private: System::Windows::Forms::ListView^  listView1;
+	private: System::Windows::Forms::ListView^  PATH_VIEW2;
+
 	private: System::Windows::Forms::TabControl^  tabControl1;
 	private: System::Windows::Forms::TabPage^  FileManagerTab;
 	private: System::Windows::Forms::TabPage^  PartitionManagerTab;
@@ -106,7 +107,7 @@ namespace PFSHDDManager {
 			this->TXTBX_PATH2 = (gcnew System::Windows::Forms::TextBox());
 			this->BTN_BACK2 = (gcnew System::Windows::Forms::Button());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->listView1 = (gcnew System::Windows::Forms::ListView());
+			this->PATH_VIEW2 = (gcnew System::Windows::Forms::ListView());
 			this->tableLayoutPanel3 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->DRIVE_LTR = (gcnew System::Windows::Forms::ComboBox());
 			this->BTN_GO = (gcnew System::Windows::Forms::Button());
@@ -256,7 +257,7 @@ namespace PFSHDDManager {
 			this->DRIVE_LTR2->Name = L"DRIVE_LTR2";
 			this->DRIVE_LTR2->Size = System::Drawing::Size(49, 21);
 			this->DRIVE_LTR2->TabIndex = 0;
-			this->DRIVE_LTR2->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::DRIVE_LTR_SelectedIndexChanged);
+			this->DRIVE_LTR2->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::DRIVE_LTR2_SelectedIndexChanged);
 			// 
 			// BTN_GO2
 			// 
@@ -267,6 +268,7 @@ namespace PFSHDDManager {
 			this->BTN_GO2->TabIndex = 1;
 			this->BTN_GO2->Text = L"GO";
 			this->BTN_GO2->UseVisualStyleBackColor = true;
+			this->BTN_GO2->Click += gcnew System::EventHandler(this, &MainForm::BTN_GO2_Click);
 			// 
 			// TXTBX_PATH2
 			// 
@@ -298,7 +300,7 @@ namespace PFSHDDManager {
 				50)));
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				401)));
-			this->tableLayoutPanel1->Controls->Add(this->listView1, 0, 1);
+			this->tableLayoutPanel1->Controls->Add(this->PATH_VIEW2, 0, 1);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel3, 0, 0);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel2, 0, 0);
 			this->tableLayoutPanel1->Controls->Add(this->PATH_VIEW, 0, 1);
@@ -315,18 +317,18 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->TabIndex = 3;
 			this->tableLayoutPanel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::tableLayoutPanel1_Paint);
 			// 
-			// listView1
+			// PATH_VIEW2
 			// 
-			this->listView1->AllowDrop = true;
-			this->listView1->ContextMenuStrip = this->PATH_VIEW_CONTEXT;
-			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->listView1->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
-			this->listView1->Location = System::Drawing::Point(447, 36);
-			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(438, 503);
-			this->listView1->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
-			this->listView1->TabIndex = 7;
-			this->listView1->UseCompatibleStateImageBehavior = false;
+			this->PATH_VIEW2->AllowDrop = true;
+			this->PATH_VIEW2->ContextMenuStrip = this->PATH_VIEW_CONTEXT;
+			this->PATH_VIEW2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->PATH_VIEW2->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
+			this->PATH_VIEW2->Location = System::Drawing::Point(447, 36);
+			this->PATH_VIEW2->Name = L"PATH_VIEW2";
+			this->PATH_VIEW2->Size = System::Drawing::Size(438, 503);
+			this->PATH_VIEW2->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
+			this->PATH_VIEW2->TabIndex = 7;
+			this->PATH_VIEW2->UseCompatibleStateImageBehavior = false;
 			// 
 			// tableLayoutPanel3
 			// 
@@ -466,8 +468,11 @@ namespace PFSHDDManager {
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void StartProcess(System::String^ fileName, System::String^ arguments);
 	private: System::Void DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e);
-private: System::Void tableLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+	private: System::Void tableLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 }
-private: System::Void TXTBX_PATH_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void TXTBX_PATH_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void ListPS2HDD();
+	private: System::Void DRIVE_LTR2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 };
 }

@@ -4,37 +4,35 @@ using namespace System;
 
 ref class PS2HDD
 {
-private:
-
+public:
 	//Basic info for games (ISO or a partition)
 	//Can be used in normal partitions too just by ignoring CDVD and Startup.
-	ref struct Game {
+	typedef ref struct Game {
 		System::String ^Name, ^Startup, ^Path;
 		System::Int32 Size;
 		System::Boolean CDVD;
 	};
 
 	//partitions have various parts that starts in a specifc sector and have a fixed size
-	ref struct Partition_Part {
+	typedef ref struct Partition_Part {
 		System::Int32 Sector, Size;
 	};
 
 	//Base partition data. Gets use of the Game structure since it have the same base variables.
 	//Has a list of parts too since ps2 partition table sometimes divides a partition in various parts.
-	ref struct Partition:Game {
+	typedef ref struct Partition:Game {
 		System::Collections::Generic::List <Partition_Part^>^ Parts = gcnew System::Collections::Generic::List<Partition_Part^>;
 		System::Boolean Game;
 	};
 
 	//device Name: "hddx:" and Size are applicable to any device.
 	//Used, Available and partition List are applicable only for PS2 HDD`s - the boolean PS2 defines if the device is a PS2 formatted device
-	ref struct Device {
+	typedef ref struct Device {
 		System::String^ Name;
 		System::Int32 Size, Used, Available;
 		System::Boolean PS2;
 		System::Collections::Generic::List <String^>^ Partition = gcnew System::Collections::Generic::List <String^>;
 	};
-
 
 	//list for all the disk drives found on system
 	System::Collections::Generic::List <Device^>^ devices;
@@ -55,7 +53,7 @@ public:
 	PS2HDD();
 
 	//list the system devices using HDL_Dump
-	Void ListDevices(); 
+	void ListDevices(); 
 
 	//Get Table of Contents of a PS2 device. Uses HDL_Dump (could use pfsshell too)
 	Void GetTOC(Device^);
@@ -69,6 +67,12 @@ public:
 
 	//function used for debuging
 	System::String^ GetOutput();
+
+	//gets device by its name
+	Device^ GetDevName(String^ Name);
+
+	//sets device to pfs filesystem with MBR partition with 128mbs
+	void InitDev(String^ Name);
 };
 
 
