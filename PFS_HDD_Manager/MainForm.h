@@ -19,9 +19,8 @@ namespace PFSHDDManager {
 		MainForm(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Adicione o código do construtor aqui
-			//
+			//codigo extra
+			HDD = gcnew PS2HDD;
 		}
 
 	protected:
@@ -37,7 +36,7 @@ namespace PFSHDDManager {
 		}
 	private: System::Diagnostics::Process^ PFSShell;
 	private: System::Diagnostics::Process^ HDLDump;
-	private: PS2HDD HDD;
+	private: PS2HDD^ HDD;
 	//BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
@@ -58,7 +57,7 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::ComboBox^  DRIVE_LTR2;
 	private: System::Windows::Forms::Button^  BTN_GO2;
 	private: System::Windows::Forms::TextBox^  TXTBX_PATH2;
-	private: System::Windows::Forms::Button^  BTN_BACK2;
+
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel3;
 	private: System::Windows::Forms::ComboBox^  DRIVE_LTR;
@@ -72,7 +71,15 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::TabPage^  PartitionManagerTab;
 	private: System::Boolean debug=false;
 	private: System::DirectoryServices::DirectoryEntry^  directoryEntry1;
-	private: System::ComponentModel::IContainer^  components;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel4;
+	private: System::Windows::Forms::Button^ BTN_BACK2;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel5;
+	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::ComboBox^ comboBox1;
+	private: System::Windows::Forms::Button^ button2;
+	private: System::Windows::Forms::Button^ button3;
+
+	private: System::ComponentModel::IContainer^ components;
 
 	private:
 		/// <summary>
@@ -88,7 +95,7 @@ namespace PFSHDDManager {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
-			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 			this->PATH_VIEW_ICONS_LARGE = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->PATH_VIEW_CONTEXT = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->exibiçãoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -116,6 +123,12 @@ namespace PFSHDDManager {
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->FileManagerTab = (gcnew System::Windows::Forms::TabPage());
 			this->PartitionManagerTab = (gcnew System::Windows::Forms::TabPage());
+			this->tableLayoutPanel4 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->tableLayoutPanel5 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->directoryEntry1 = (gcnew System::DirectoryServices::DirectoryEntry());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
@@ -123,6 +136,9 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel3->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->FileManagerTab->SuspendLayout();
+			this->PartitionManagerTab->SuspendLayout();
+			this->tableLayoutPanel4->SuspendLayout();
+			this->tableLayoutPanel5->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// PATH_VIEW_ICONS_LARGE
@@ -421,6 +437,7 @@ namespace PFSHDDManager {
 			// 
 			// PartitionManagerTab
 			// 
+			this->PartitionManagerTab->Controls->Add(this->tableLayoutPanel4);
 			this->PartitionManagerTab->Location = System::Drawing::Point(4, 22);
 			this->PartitionManagerTab->Name = L"PartitionManagerTab";
 			this->PartitionManagerTab->Padding = System::Windows::Forms::Padding(3);
@@ -428,6 +445,83 @@ namespace PFSHDDManager {
 			this->PartitionManagerTab->TabIndex = 1;
 			this->PartitionManagerTab->Text = L"Partition Manager";
 			this->PartitionManagerTab->UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanel4
+			// 
+			this->tableLayoutPanel4->ColumnCount = 1;
+			this->tableLayoutPanel4->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				100)));
+			this->tableLayoutPanel4->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				20)));
+			this->tableLayoutPanel4->Controls->Add(this->tableLayoutPanel5, 0, 0);
+			this->tableLayoutPanel4->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanel4->Location = System::Drawing::Point(3, 3);
+			this->tableLayoutPanel4->Name = L"tableLayoutPanel4";
+			this->tableLayoutPanel4->RowCount = 2;
+			this->tableLayoutPanel4->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 33)));
+			this->tableLayoutPanel4->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
+			this->tableLayoutPanel4->Size = System::Drawing::Size(1289, 542);
+			this->tableLayoutPanel4->TabIndex = 0;
+			// 
+			// tableLayoutPanel5
+			// 
+			this->tableLayoutPanel5->ColumnCount = 4;
+			this->tableLayoutPanel5->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				55)));
+			this->tableLayoutPanel5->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				100)));
+			this->tableLayoutPanel5->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				55)));
+			this->tableLayoutPanel5->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				55)));
+			this->tableLayoutPanel5->Controls->Add(this->label1, 0, 0);
+			this->tableLayoutPanel5->Controls->Add(this->comboBox1, 1, 0);
+			this->tableLayoutPanel5->Controls->Add(this->button2, 2, 0);
+			this->tableLayoutPanel5->Controls->Add(this->button3, 3, 0);
+			this->tableLayoutPanel5->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanel5->Location = System::Drawing::Point(3, 3);
+			this->tableLayoutPanel5->Name = L"tableLayoutPanel5";
+			this->tableLayoutPanel5->RowCount = 1;
+			this->tableLayoutPanel5->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
+			this->tableLayoutPanel5->Size = System::Drawing::Size(1283, 27);
+			this->tableLayoutPanel5->TabIndex = 0;
+			// 
+			// label1
+			// 
+			this->label1->Anchor = System::Windows::Forms::AnchorStyles::Left;
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(3, 7);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(44, 13);
+			this->label1->TabIndex = 0;
+			this->label1->Text = L"Device:";
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Location = System::Drawing::Point(58, 3);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(1112, 21);
+			this->comboBox1->TabIndex = 1;
+			// 
+			// button2
+			// 
+			this->button2->Location = System::Drawing::Point(1176, 3);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(49, 21);
+			this->button2->TabIndex = 2;
+			this->button2->Text = L"button2";
+			this->button2->UseVisualStyleBackColor = true;
+			// 
+			// button3
+			// 
+			this->button3->Location = System::Drawing::Point(1231, 3);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(49, 21);
+			this->button3->TabIndex = 3;
+			this->button3->Text = L"button3";
+			this->button3->UseVisualStyleBackColor = true;
 			// 
 			// MainForm
 			// 
@@ -449,10 +543,15 @@ namespace PFSHDDManager {
 			this->tabControl1->ResumeLayout(false);
 			this->FileManagerTab->ResumeLayout(false);
 			this->FileManagerTab->PerformLayout();
+			this->PartitionManagerTab->ResumeLayout(false);
+			this->tableLayoutPanel4->ResumeLayout(false);
+			this->tableLayoutPanel5->ResumeLayout(false);
+			this->tableLayoutPanel5->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
+
 
 	private: System::Void ViewPath(System::String^ path);
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e);
@@ -474,5 +573,6 @@ namespace PFSHDDManager {
 	private: System::Void BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void ListPS2HDD();
 	private: System::Void DRIVE_LTR2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+
 };
 }

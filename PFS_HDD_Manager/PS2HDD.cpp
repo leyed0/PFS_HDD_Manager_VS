@@ -13,6 +13,7 @@ PS2HDD::PS2HDD()
 	PFSShell->StartInfo->RedirectStandardInput = true;
 	PFSShell->StartInfo->RedirectStandardOutput = true;
 	PFSShell->EnableRaisingEvents = true;
+	//this->PFSShell->OutputDataReceived += gcnew System::Diagnostics::DataReceivedEventHandler(this, &PS2HDD::PfsShell_OutputDataReceived);
 
 	HDLDump = gcnew System::Diagnostics::Process;
 	HDLDump->StartInfo->FileName = "shell\\hdl_dump.exe";
@@ -23,10 +24,11 @@ PS2HDD::PS2HDD()
 	HDLDump->StartInfo->RedirectStandardInput = true;
 	HDLDump->StartInfo->RedirectStandardOutput = true;
 	HDLDump->EnableRaisingEvents = true;
+	//this->HDLDump->OutputDataReceived += gcnew System::Diagnostics::DataReceivedEventHandler(this, &PS2HDD::HDL_OutputDataReceived);
 
 	devices = gcnew System::Collections::Generic::List <Device^>;
 }
-void PS2HDD::ListDevices() {
+void PS2HDD::Query() {
 	array<String^>^ ret;
 	HDLDump->StartInfo->Arguments = "query";
 	HDLDump->Start();
@@ -36,7 +38,7 @@ void PS2HDD::ListDevices() {
 	while (true) {
 		tmp = gcnew Device;
 		tmp->Name = StringReader->ReadLine();
-				if (tmp->Name->Contains("Optical")) break;
+		if (tmp->Name->Contains("Optical")) break;
 		if (tmp->Name->Contains("hdd")) {
 			if (tmp->Name->Contains("MB")) {
 				tmp->Name = tmp->Name->Substring(tmp->Name->LastIndexOf("	") + 1);
@@ -56,13 +58,14 @@ void PS2HDD::ListDevices() {
 			}
 		}
 	}
+	//HDLDump->Kill();
 }
 
 
 Void PS2HDD::GetTOC(Device^ dev) {
 	//PS2HDD();
 	HDLDump->StartInfo->Arguments = "toc " + dev->Name;
-	HDLDump->Start();
+	HDLDump->Start(); 
 	String^ tmp = HDLDump->StandardOutput->ReadToEnd();
 
 	System::IO::StringReader^ tmpStringReader = gcnew System::IO::StringReader(tmp);
@@ -73,8 +76,8 @@ Void PS2HDD::GetTOC(Device^ dev) {
 }
 
 
-System::String^ PS2HDD::GetOutput() {
-	ListDevices();
+System::String^ PS2HDD::Debug() {
+	Query();
 	String^ tmp;
 	for (int i = 0; i < devices->Count; i++) {
 		tmp += "\n" + devices[i]->Name + "\t" + devices[i]->Size;
@@ -98,13 +101,6 @@ PS2HDD::Device^ PS2HDD::GetDevName(String^ Name)
 	return nullptr;
 }
 
-void PS2HDD::InitDev(String ^ Name)
-{
-	HDLDump->StartInfo->Arguments = "initialize " + Name;
-	HDLDump->Start();
-	devices->Clear();
-	ListDevices();
-}
 
 
 Void PS2HDD::GetCDVDInfo(String^ Path) {
@@ -116,6 +112,152 @@ Void PS2HDD::GetCDVDInfo(String^ Path) {
 Void PS2HDD::GetPartitionInfo(Device^ Dev) {
 	HDLDump->StartInfo->Arguments = "info " + Dev->Name + "\"" + Dev->Partition[0];
 	HDLDump->Start();
+	return;
+}
 
+void PS2HDD::InitDev(String^ Name)
+{
+	System::Windows::Forms::MessageBox::Show("Formatting");
+	HDLDump->StartInfo->Arguments = "initialize " + Name;
+	HDLDump->Start();
+	devices->Clear();
+	Query();
+}
+
+void PS2HDD::MkPart(String^ Dev, String^ PartName, int Size)
+{
+	throw gcnew System::NotImplementedException();
+}
+
+//void PS2HDD::PfsShell_OutputDataReceived(System::Object^ sender, System::Diagnostics::DataReceivedEventArgs^ e)
+//{
+//	out += e->Data;
+//	out += e->Data;
+//	out += e->Data;
+//	throw gcnew System::NotImplementedException();
+//}
+
+
+void PS2HDD::test()
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device hdd2:");
+}
+
+bool PS2HDD::HDLDeletePart(Device^ dev, Partition^ part)
+{
+	HDLDump->StartInfo->Arguments = "delete " + dev->Name + " " + part->Name;
+	HDLDump->Start();
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if(output->Contains("not fount")) return false;
+	return true;
+}
+
+bool PS2HDD::PFS_Initialize(Device^ dev)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + dev->Name);
+	PFSShell->StandardInput->WriteLine("initialize yes");
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return false;
+	return true;
+}
+
+bool PS2HDD::PFS_Mkpart(Device^ dev, String^ Name, Int16 Size)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + dev->Name);
+	PFSShell->StandardInput->WriteLine("mkpart "+Name + " " + Size + "MB");
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return false;
+	return true;
+}
+
+void PS2HDD::PFS_MkDir(Device^ Dev, String^ Part, String^ Name)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
+	PFSShell->StandardInput->WriteLine("mount " + Part);
+	PFSShell->StandardInput->WriteLine("mkdir " + Name);
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return;
+	return;
+}
+
+void PS2HDD::PFS_RmDir(Device^ Dev, String^ Part, String^ Name)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
+	PFSShell->StandardInput->WriteLine("mount " + Part);
+	PFSShell->StandardInput->WriteLine("rmdir " + Name);
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return;
+	return;
+}
+
+void PS2HDD::PFS_Get(Device^ Dev, String^ Part, String^ Orig, String^ Name, String^ Dest)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
+	PFSShell->StandardInput->WriteLine("mount " + Part);
+	PFSShell->StandardInput->WriteLine("cd " + Orig);
+	PFSShell->StandardInput->WriteLine("lcd " + Dest);
+	PFSShell->StandardInput->WriteLine("get " + Name);
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return;
+	return;
+}
+
+void PS2HDD::PFS_Put(String^ Orig, String^ Name, Device^ Dev, String^ Part, String^ Dest)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("lcd " + Orig);
+	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
+	PFSShell->StandardInput->WriteLine("mount " + Part);
+	PFSShell->StandardInput->WriteLine("cd " + Dest);
+	PFSShell->StandardInput->WriteLine("put " + Name);
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return;
+	return;
+}
+
+void PS2HDD::PFS_RM(Device^ Dev, String^ Part, String^ Dest, String^ Name)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
+	PFSShell->StandardInput->WriteLine("mount " + Part);
+	PFSShell->StandardInput->WriteLine("cd " + Dest);
+	PFSShell->StandardInput->WriteLine("rm " + Name);
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return;
+	return;
+}
+
+void PS2HDD::PFS_Rename(Device^ Dev, String^ Part, String^ Dest, String^ OldName, String^ NewName)
+{
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
+	PFSShell->StandardInput->WriteLine("mount " + Part);
+	PFSShell->StandardInput->WriteLine("cd " + Dest);
+	PFSShell->StandardInput->WriteLine("rename " + OldName + " " + NewName);
+	PFSShell->StandardInput->WriteLine("exit");
+	output = PFSShell->StandardOutput->ReadToEnd();
+	output += PFSShell->StandardError->ReadToEnd();
+	if (output->Contains("error")) return;
 	return;
 }

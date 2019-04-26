@@ -28,11 +28,12 @@ namespace filesystem {
 
 	ref class File {
 	private:
-		System::String ^Name, ^Path;
+		System::String ^Name, ^Path, ^ParentName;
 		enum class Type { file, folder, partition };
 		System::Char^ extension;
-		System::Int16 Size;
+		System::Int32 Size;
 	public:
+		File(System::String^ Name) { this->Name = Name; };
 		//System::Collections::Generic::List<T>^ FullPath();
 	};
 
@@ -40,6 +41,6 @@ namespace filesystem {
 	private:
 		Tree<File^>^ tree;
 	public:
-
+		FileSystem(System::String^ Name) { tree = gcnew Tree<File^>(gcnew File(Name)); };
 	};
 }

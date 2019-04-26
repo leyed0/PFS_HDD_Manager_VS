@@ -6,13 +6,13 @@ using namespace PFSHDDManager;
 using namespace Windows;
 
 [STAThreadAttribute]
-void main(array<String^>^ args) {
+int main(array<String^>^ argv) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 	PFSHDDManager::MainForm form;
 	Application::Run(%form);
+	return 0;
 }
-
 
 System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 {
@@ -37,7 +37,7 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 	}
 	catch (System::IO::IOException^ err)
 	{
-		return;
+		return ;
 	}
 	return System::Void();
 }
@@ -49,6 +49,7 @@ System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, Sys
 	Path = System::IO::Directory::GetLogicalDrives()[0];
 	ViewPath(Path);
 	ListPS2HDD();
+
 	return System::Void();
 }
 
@@ -121,8 +122,11 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 }
 
 System::Void PFSHDDManager::MainForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
-	richTextBox1->Text = HDD.GetOutput();
+	HDD->PFS_Mkpart(HDD->GetDevName("hdd5:"),"Debug", 128);
+	richTextBox1->Text = HDD->output;
+	//richTextBox1->Text = HDD->Debug();
 
+	//PFSShell->OutputDataReceived();
 	//PFS->StartInfo->FileName = "shell\\1_090.exe";
 	//PFS->StartInfo->FileName = "cmd";
 	//PFSShell->StartInfo->CreateNoWindow = true;
@@ -169,14 +173,6 @@ System::Void PFSHDDManager::MainForm::StartProcess(System::String^ fileName, Sys
 	//processStartInfo.RedirectStandardOutput = true;
 }
 
-/*System::Void PFSHDDManager::MainForm::log() {
-	FILE* fp;
-	char result[1000];
-	fp = popen("ls -al .", "r");
-	fread(result, 1, sizeof(result), fp);
-	fclose(fp);
-	printf("%s", result);
-}*/
 
 
 System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -194,8 +190,8 @@ System::Void PFSHDDManager::MainForm::BTN_GO2_Click(System::Object^  sender, Sys
 }
 
 System::Void PFSHDDManager::MainForm::ListPS2HDD() {
-	HDD.ListDevices();
-	for each (PS2HDD::Device^ var in HDD.devices)
+	HDD->Query();
+	for each (PS2HDD::Device^ var in HDD->devices)
 	{
 		DRIVE_LTR2->Items->Add(var->Name);
 	}
@@ -203,9 +199,13 @@ System::Void PFSHDDManager::MainForm::ListPS2HDD() {
 
 System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
 {
-	if (!HDD.GetDevName(DRIVE_LTR2->Text)->PS2) {
-		if (MessageBox::Show("The selected device is not in the PFS filesystem. Set to PFS system?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK);
-		HDD.InitDev(DRIVE_LTR2->Text);
+	if (!HDD->GetDevName(DRIVE_LTR2->Text)->PS2) {
+		if (MessageBox::Show("The selected device doesnt contains a PFS Partition table. Initialize it with PFS Table ?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
+			&& MessageBox::Show("Are You sure ?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
+			&& MessageBox::Show("Are You really sure ?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
+			&& MessageBox::Show("this will erase everything on the drive", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
+			&& MessageBox::Show("allright then", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK)
+		HDD->InitDev(DRIVE_LTR2->Text);
 	}
 	else
 		return;

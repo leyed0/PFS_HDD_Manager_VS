@@ -1,3 +1,27 @@
+V0.6.6.2{
+	Added:
+		Now, when a device is selected in the right side of the GUI, in the case that the device is not PFS ready, the user will be prompted to fomat it in the PFS system
+			It will be anoyingly repeat asking if the user is sure about this, and then format the device using PFSShell functions
+		Implemented almost every PFSShell and some HDLDump functions. (in a rudmentary way, but fully functional - no error handling yet)
+
+	Changed:
+		changed some structs on PS2HDD class
+			-created a specific ISO struct, wich is gona be used to list the ISO`s on host device
+			-Edited "Partition" struct to be an specific identifier to the PFS device partitions
+			-Edited "Game" struct to be an specific identifier to the PFS device game partitions
+
+	Fixed:
+		
+
+	Removed:
+		Functions from mainform:		
+			HDLScanHdds();
+			SetProcesses();
+
+	Todo:
+		Implement the usage of the "Partition" and "Game" structs
+		Implement the view of the PFS Partitions and files in the right side of GUI
+
 V0.4.3.2{
 	Added:
 		Filesystem libs

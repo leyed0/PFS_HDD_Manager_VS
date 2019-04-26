@@ -54,7 +54,6 @@
       <Filter>Arquivos de Origem</Filter>
     </None>
     <None Include="shell\pfsshell.exe" />
-    <None Include="packages.config" />
     <None Include="shell\hello.bat">
       <Filter>Arquivos de Origem</Filter>
     </None>

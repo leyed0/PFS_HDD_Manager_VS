@@ -186,7 +186,6 @@
     <None Include="..\CHANGELOG.md" />
     <None Include="..\README.md" />
     <None Include="GIT\PropertySheet.props" />
-    <None Include="packages.config" />
     <None Include="shell\hdl_dump.exe">
       <DeploymentContent>false</DeploymentContent>
     </None>
