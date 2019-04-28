@@ -121,10 +121,10 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 	return System::Void();
 }
 
-System::Void PFSHDDManager::MainForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
-	HDD->PFS_Mkpart(HDD->GetDevName("hdd5:"),"Debug", 128);
-	richTextBox1->Text = HDD->output;
-	//richTextBox1->Text = HDD->Debug();
+System::Void PFSHDDManager::MainForm::Debug_Button_Click(System::Object^  sender, System::EventArgs^  e) {
+	//HDD->PFS_Mkpart(HDD->GetDevName("hdd5:"),"Debug", 128);
+	//richTextBox1->Text = HDD->output;
+	richTextBox1->Text = HDD->Debug();
 
 	//PFSShell->OutputDataReceived();
 	//PFS->StartInfo->FileName = "shell\\1_090.exe";
@@ -199,14 +199,62 @@ System::Void PFSHDDManager::MainForm::ListPS2HDD() {
 
 System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
 {
-	if (!HDD->GetDevName(DRIVE_LTR2->Text)->PS2) {
+	CurrDev = HDD->GetDevName(DRIVE_LTR2->Text);
+	if (!CurrDev->PFS) {
 		if (MessageBox::Show("The selected device doesnt contains a PFS Partition table. Initialize it with PFS Table ?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
 			&& MessageBox::Show("Are You sure ?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
 			&& MessageBox::Show("Are You really sure ?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
 			&& MessageBox::Show("this will erase everything on the drive", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
 			&& MessageBox::Show("allright then", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK)
-		HDD->InitDev(DRIVE_LTR2->Text);
+		HDD->InitDev(CurrDev);
 	}
-	else
-		return;
+
+
+	System::Windows::Forms::ImageList^ IMAGELIST;
+	if (PATH_VIEW2->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
+	if (PATH_VIEW2->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
+
+
+	CurrDev = HDD->GetDevName(DRIVE_LTR2->Text);
+	if (CurrDev->PFS) {
+		HDD->Query_Part(CurrDev);
+			PATH_VIEW2->Clear();
+		for each (PS2HDD::Partition^ part in CurrDev->Partitions)
+		{
+			PATH_VIEW2->Items->Add(part->Name, IMAGELIST->Images->Count - 1);
+		}
+		for each (PS2HDD::Game^ game in CurrDev->Games)
+		{
+			PATH_VIEW2->Items->Add(game->Name, IMAGELIST->Images->Count - 3);
+		}
+	}
 }
+
+/*Readings:
+0x0001 00000000.:  1   128MB __mbr
+0x0100 00040000.:  1   128MB Debug
+0x1337 00080000.:  3  1280MB PP.HDL.Contra
+0x1337 00300000.:  4  1408MB PP.HDL.silenthill
+0x1337 005c0000.:  4  1536MB PP.HDL.godhand
+0x1337 008c0000.:  3  1664MB PP.HDL.needprostreet
+0x1337 00c00000.:  4  1920MB PP.HDL.bombapatch
+Total slice size: 238472MB, used: 8064MB, available: 230400MB
+
+
+type     size flags           startup      name
+DVD 1228736KB                 SLPS_257.65  Contra
+DVD 1416704KB                 SLUS_218.99  silenthill
+DVD 1530944KB                 SLUS_215.03  godhand
+DVD 1613824KB                 SLUS_216.58  needprostreet
+DVD 1861632KB                 SLPM_663.74  bombapatch
+total 238464MB, used 8064MB, available 230400MB
+
+type		size			name
+drwxrwxrwx        512 2019-04-27 00:56 .
+drwxrwxrwx        512 2019-04-27 00:56 ..
+drwxrwxrwx        512 2019-04-25 20:28 teste
+drwxrwxrwx        512 2019-04-27 00:55 teste2
+drwxrwxrwx        512 2019-04-27 00:55 teste3
+-rw-rw-rw-         64 2019-04-27 00:56 hello.bat
+-rw-rw-rw-      36818 2019-04-27 00:56 pfsshell.exe
+*/

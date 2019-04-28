@@ -1,45 +1,54 @@
 #pragma once
+#include "File.h"
 
 using namespace System;
 
 ref class PS2HDD
 {
 public:
+#pragma region Struct definitions
 	//Basic info for	ISO games
 	typedef ref struct ISO {
 		System::String ^Name, ^Startup, ^Path;
 		System::Int32 Size;
-		System::Boolean CDVD;
+		System::Boolean DVD;
 	}ISO;
 
 	//Base info for partitions
 	typedef ref struct Partition{
-		System::Int32 Size, Parts;
-		System::String^ Name;
+		System::Single Size;
+		System::Int32 Parts;
+		System::String^ Name, ^Type;
 	}Partition;
 
 	//Base info for game partitions
 	typedef ref struct Game:Partition {
-		System::Boolean Type;
+		System::Boolean DVD;
 		String^ Flags, ^ Startup;
 	}Game;
 
 	//device Name: "hddx:" and Size are applicable to any device.
-	//Used, Available and partition List are applicable only for PS2 HDD`s - the boolean PS2 defines if the device is a PS2 formatted device
+	//Used, Available and partition List are applicable only for PS2 HDD`s - the boolean PS2 defines if it is a PFS formatted device
 	typedef ref struct Device {
 		System::String^ Name;
 		System::Int32 Size, Used, Available;
-		System::Boolean PS2;
+		System::Boolean PFS;
 		System::Collections::Generic::List <String^>^ Partition = gcnew System::Collections::Generic::List <String^>; //temp
 		System::Collections::Generic::List <PS2HDD::Partition^>^ Partitions;
 		System::Collections::Generic::List <PS2HDD::Game^>^ Games;
 	}Device;
+#pragma endregion Struct definitions
+	void File(Partition^ Orig) { return; };
 
-	//list for all the disk drives found on system
+#pragma region Variables
+	//list all the disk drives found on system
 	System::Collections::Generic::List <Device^>^ devices;
 
-	//output for the console readdings - Should be removed from here and made local for the specific functions that use it
+	//output for the console readdings - Used for Debugging
 	String^ output;
+
+	//same as output - auxiliar
+	System::IO::StringReader^ StringReader;
 
 	//the process for using PFSShell.exe
 	System::Diagnostics::Process^ PFSShell;
@@ -47,17 +56,21 @@ public:
 	//the process for using HDL_Dump.exe
 	System::Diagnostics::Process^ HDLDump;
 
-	//same as output
-	System::IO::StringReader^ StringReader;
-public:
+#pragma endregion Variables
+
 	//set the processes configs for the program
 	PS2HDD();
 
-	//teste
-	void HDL_OutputDataReceived(System::Object^ sender, System::EventArgs^ e) { return;};
-
 	//list the system devices using HDL_Dump
-	void Query(); 
+	System::Void Query();
+
+	System::Void Query_Part_Path(Device^ Dev, Partition^ Pt);
+
+	//list the partitions in the given device
+	System::Void Query_Part(Device^ Dev);
+
+	//test
+	System::Void HDL_OutputDataReceived(System::Object^ sender, System::EventArgs^ e) { return;};
 
 	//Get Table of Contents of a PS2 device. Uses HDL_Dump (could use pfsshell too)
 	Void GetTOC(Device^);
@@ -77,63 +90,71 @@ public:
 
 	//OK
 	//initializes device into pfs filesystem with 128mb MBR partition
-	void InitDev(String^ Name);
+	System::Void InitDev(Device^ Dev);
 
 
-	void MkPart(String^ Dev, String^ PartName, int Size);
+	System::Void MkPart(String^ Dev, String^ PartName, int Size);
 	
 	//void PfsShell_OutputDataReceived(System::Object^ sender, System::Diagnostics::DataReceivedEventArgs^ e);
 
 
 
-	void test();
+	System::Void test();
 
-	bool HDLDumpp(Device^ dev, String^ file) { return 0; };
+	System::Boolean HDLDumpp(Device^ dev, String^ file) { return 0; };
 
 	//OK
 	//Delete a specified partition of the specified device
-	bool HDLDeletePart(Device^ dev, Partition^ Part);
+	System::Boolean HDLDeletePart(Device^ dev, Partition^ Part);
 
 	//OK
 	//Initialize the HDD into PFS system using PFSShell
-	bool PFS_Initialize(Device^ dev);
+	System::Boolean PFS_Initialize(Device^ dev);
 
 	//OK
 	//Make a Partition with the given Name and Size(MB)
-	bool PFS_Mkpart(Device^ dev, String^ Name, Int16 Size);
+	System::Boolean PFS_Mkpart(Device^ dev, String^ Name, Int16 Size);
 
 	//Will not be used on this way
-	bool PFS_LCD(String^ Path) { return 0; };
+	System::Boolean PFS_LCD(String^ Path) { return 0; };
 
 	//List Partitions
-	void PFS_LS(Device^ Dev) { return; };
+	System::Boolean PFS_LS(Device^ Dev) { return false; };
 
 	//List Files
-	void PFS_LS(Device^ Dev, String^ Part) { return; };
+	System::Void PFS_LS(Device^ Dev, String^ Part) { return; };
 
 	//OK
 	//makes a directory in the given device and partition, with the given name
-	void PFS_MkDir(Device^ Dev, String^ Part, String^ Name);
+	System::Void PFS_MkDir(Device^ Dev, String^ Part, String^ Name);
 	
 	//OK
 	//Removes the given directory in the given device partition
-	void PFS_RmDir(Device^ Dev, String^ Part, String^ Name);
+	System::Void PFS_RmDir(Device^ Dev, String^ Part, String^ Name);
 
 	//OK
 	//copy the fine in the given path from ps2 hdd to the givem system path
-	void PFS_Get(Device^ Dev, String^ Part, String^ Orig, String^ Name, String^ Dest);
+	System::Void PFS_Get(Device^ Dev, String^ Part, String^ Orig, String^ Name, String^ Dest);
+
+	//OK
+	//copy the fine in the given path from ps2 hdd to the givem system path
+	System::Void PFS_Gets(Device^ Dev, String^ Part, String^ Orig, System::Collections::Generic::List <String^>^ Names, String^ Dest);
 
 	//OK
 	//Write the given file to the given path, partition and device
-	void PFS_Put(String^ Orig, String^ Name, Device^ Dev, String^ Part, String^ Dest);
+	System::Void PFS_Put(String^ Orig, String^ Name, Device^ Dev, String^ Part, String^ Dest);
+
+	//OK
+	//Write the given file to the given path, partition and device
+	System::Void PFS_Puts(String^ Orig, System::Collections::Generic::List <String^>^ Names, Device^ Dev, String^ Part, String^ Dest);
 
 	//OK
 	//Removes the given file from the given path, partition and device
-	void PFS_RM(Device^ Dev, String^ Part, String^ Dest, String^ Name);
+	System::Void PFS_RM(Device^ Dev, String^ Part, String^ Dest, String^ Name);
 
 	//OK
 	//Removes the given file from the given path, partition and device
-	void PFS_Rename(Device^ Dev, String^ Part, String^ Dest, String^ OldName, String^ NewName);
+	System::Void PFS_Rename(Device^ Dev, String^ Part, String^ Dest, String^ OldName, String^ NewName);
 };
 
 //research:

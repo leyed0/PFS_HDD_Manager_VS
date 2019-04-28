@@ -11,51 +11,48 @@ Tree<T>::Tree(T root)
 	CurrNode = Root;
 }
 
-template <class T>
-System::Boolean Tree<T>::AddChild(T data) {
-	AddChild(data, CurrNode->Parent);
-}
+//template <class T>
+//System::Boolean Tree<T>::AddChild(T data) {
+//	AddChild(data, CurrNode);
+//}
 
 template <class T>
 System::Boolean Tree<T>::AddChild(T data, Node^ parent) {
-	Node^ tmp;
-	tmp = gcnew Node;
-	tmp->Parent = CurrNode;
+	Node^ tmp = gcnew Node;
+	tmp->Parent = parent;
 	tmp->Data = data;
-	tmp->Child = nullptr;
-	if (parent->Child == nullptr) parent->Child = gcnew System::Collections::Generic::List<Node^>;
+	tmp->Child = gcnew System::Collections::Generic::List<Node^>;
 	parent->Child->Add(tmp);
 }
 
-template<class T>
-typename Tree<T>::Node^ Tree<T>::GetCurrNode()
-{
-	return CurrNode;
-}
+//template<class T>
+//typename Tree<T>::Node^ Tree<T>::GetCurrNode()
+//{
+//	return CurrNode;
+//}
 
-template<class T>
-T Tree<T>::SetCurrNode(T dt)
-{
-	if (Root->Data == dt) return Root->Data;
-	for each (Node^ nd in Root->Child)
-	{
-		if (nd->Data == dt) return nd->Data;
-		if (nd->Child != nullptr);
-	}
-}
+//template<class T>
+//System::Void Tree<T>::SetCurrNode(Node^ Nd)
+//{
+//	if (Root->Data == dt) return Root->Data;
+//	for each (Node^ nd in Root->Child)
+//	{
+//		if (nd->Data == dt) return nd->Data;
+//		if (nd->Child != nullptr);
+//	}
+//}
 
 template<class T>
 typename Tree<T>::Node^ Tree<T>::SearchNode(T dt)
 {
-	SrchNode = SearchNode(dt, Root);
-	return SrchNode;
+	return SearchNode(dt, Root);
 }
 
 template<class T>
 typename Tree<T>::Node^ Tree<T>::SearchNode(T dt, Node^ sn)
 {
 	if (sn->Data == dt) return sn;
-	if(SrchNode->Child != nullptr) for each (Node^ nd in SrchNode->Child)
+	for each (Node^ nd in sn->Child)
 	{
 		if (nd->Data == dt) return nd;
 		return SearchNode(dt, nd);
@@ -67,16 +64,11 @@ typename Tree<T>::Node^ Tree<T>::SearchNode(T dt, Node^ sn)
 template<class T>
 System::Boolean Tree<T>::Delete(Node^ nd)
 {
-	nd = nullptr;
+	if (nd->Child->Count == 0) nd = nullptr;
+	else return false;
 	return true;
 }
 
-template<class T>
-System::Collections::Generic::List<T>^ filesystem::Tree<T>::GetChildList()
-{
-	throw gcnew System::NotImplementedException();
-	// TODO: insert return statement here
-}
 
 //template<class T>
 //System::Collections::Generic::List<Tree<T>::Node^>^ Tree<T>::GetChildList()
@@ -88,12 +80,6 @@ System::Collections::Generic::List<T>^ filesystem::Tree<T>::GetChildList()
 //	}
 //	return ret;
 //}
-
-template<class T>
-T Tree<T>::GetParent()
-{
-	return CurrNode->Parent->Data;
-}
 
 template<class T>
 typename Tree<T>::Node^ Tree<T>::test(Node^)

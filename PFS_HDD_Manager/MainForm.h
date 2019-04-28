@@ -34,6 +34,7 @@ namespace PFSHDDManager {
 				delete components;
 			}
 		}
+	private: PS2HDD::Device^ CurrDev;
 	private: System::Diagnostics::Process^ PFSShell;
 	private: System::Diagnostics::Process^ HDLDump;
 	private: PS2HDD^ HDD;
@@ -51,7 +52,8 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::ToolStripMenuItem^  gradeToolStripMenuItem;
 	private: System::Windows::Forms::ImageList^  PATH_VIEW_ICONS_SMALL;
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
-	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^ Debug_Button;
+
 	private: System::Windows::Forms::ListView^  PATH_VIEW;
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel2;
 	private: System::Windows::Forms::ComboBox^  DRIVE_LTR2;
@@ -70,7 +72,7 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::TabPage^  FileManagerTab;
 	private: System::Windows::Forms::TabPage^  PartitionManagerTab;
 	private: System::Boolean debug=false;
-	private: System::DirectoryServices::DirectoryEntry^  directoryEntry1;
+
 	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel4;
 	private: System::Windows::Forms::Button^ BTN_BACK2;
 	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel5;
@@ -106,7 +108,7 @@ namespace PFSHDDManager {
 			this->gradeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_ICONS_SMALL = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->Debug_Button = (gcnew System::Windows::Forms::Button());
 			this->PATH_VIEW = (gcnew System::Windows::Forms::ListView());
 			this->tableLayoutPanel2 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->DRIVE_LTR2 = (gcnew System::Windows::Forms::ComboBox());
@@ -129,7 +131,6 @@ namespace PFSHDDManager {
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->directoryEntry1 = (gcnew System::DirectoryServices::DirectoryEntry());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
@@ -145,8 +146,9 @@ namespace PFSHDDManager {
 			// 
 			this->PATH_VIEW_ICONS_LARGE->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^>(resources->GetObject(L"PATH_VIEW_ICONS_LARGE.ImageStream")));
 			this->PATH_VIEW_ICONS_LARGE->TransparentColor = System::Drawing::Color::Transparent;
-			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(0, L"file.png");
-			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(1, L"folder.png");
+			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(0, L"Game.png");
+			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(1, L"file.png");
+			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(2, L"folder.png");
 			// 
 			// PATH_VIEW_CONTEXT
 			// 
@@ -203,8 +205,9 @@ namespace PFSHDDManager {
 			// 
 			this->PATH_VIEW_ICONS_SMALL->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^>(resources->GetObject(L"PATH_VIEW_ICONS_SMALL.ImageStream")));
 			this->PATH_VIEW_ICONS_SMALL->TransparentColor = System::Drawing::Color::Transparent;
-			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(0, L"file.png");
-			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(1, L"folder.png");
+			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(0, L"Game.png");
+			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(1, L"file.png");
+			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(2, L"folder.png");
 			// 
 			// richTextBox1
 			// 
@@ -215,15 +218,15 @@ namespace PFSHDDManager {
 			this->richTextBox1->TabIndex = 5;
 			this->richTextBox1->Text = L"";
 			// 
-			// button1
+			// Debug_Button
 			// 
-			this->button1->Location = System::Drawing::Point(891, 3);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(70, 27);
-			this->button1->TabIndex = 4;
-			this->button1->Text = L"Debug";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
+			this->Debug_Button->Location = System::Drawing::Point(891, 3);
+			this->Debug_Button->Name = L"Debug_Button";
+			this->Debug_Button->Size = System::Drawing::Size(70, 27);
+			this->Debug_Button->TabIndex = 4;
+			this->Debug_Button->Text = L"Debug";
+			this->Debug_Button->UseVisualStyleBackColor = true;
+			this->Debug_Button->Click += gcnew System::EventHandler(this, &MainForm::Debug_Button_Click);
 			// 
 			// PATH_VIEW
 			// 
@@ -320,7 +323,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel3, 0, 0);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel2, 0, 0);
 			this->tableLayoutPanel1->Controls->Add(this->PATH_VIEW, 0, 1);
-			this->tableLayoutPanel1->Controls->Add(this->button1, 2, 0);
+			this->tableLayoutPanel1->Controls->Add(this->Debug_Button, 2, 0);
 			this->tableLayoutPanel1->Controls->Add(this->richTextBox1, 2, 1);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tableLayoutPanel1->Location = System::Drawing::Point(3, 3);
@@ -564,7 +567,7 @@ namespace PFSHDDManager {
 	private: System::Void BTN_GO_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void BTN_BACK_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void DRIVE_LTR_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void Debug_Button_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void StartProcess(System::String^ fileName, System::String^ arguments);
 	private: System::Void DRIVE_LTR_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void tableLayoutPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
