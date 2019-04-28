@@ -1,21 +1,24 @@
-V0.10.7.3{
-	Added:
+V0.12.7.3{
+	ADDED:
 		Now, when a device is selected in the right side of the GUI, in the case it is PFS formated, it lists the partitions in the device
 		Implemented Game and Partition structs usage
 		Function that lists the files in a given partition(Query_Part_Path) - maybe change the name in the future
 		Aded Disc icon to identify game partitions
+		Aded Memory Card Icon For Future Use
+		Aded Dark Icon Counterparts
 
-	Changed:
+	CHANGED:
 		File struct moved to PS2HDD class... Its usage will be more direct
 
-	Fixed:
+	FIXED:
 		Fixed some missdirected calls on the query sequence
 
-	Removed:
+	REMOVED:
 
-	Todo:
+	TODO:
 		Implement the function that will list the folders after a partition is selected
 		Identify game ISO`s with the game icon
+
 
 V0.6.6.2{
 	Added:

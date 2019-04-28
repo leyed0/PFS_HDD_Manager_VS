@@ -225,7 +225,7 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Ob
 		}
 		for each (PS2HDD::Game^ game in CurrDev->Games)
 		{
-			PATH_VIEW2->Items->Add(game->Name, IMAGELIST->Images->Count - 3);
+			PATH_VIEW2->Items->Add(game->Name, IMAGELIST->Images->Count - 4);
 		}
 	}
 }

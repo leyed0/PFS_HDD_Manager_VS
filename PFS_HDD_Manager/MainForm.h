@@ -146,9 +146,10 @@ namespace PFSHDDManager {
 			// 
 			this->PATH_VIEW_ICONS_LARGE->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^>(resources->GetObject(L"PATH_VIEW_ICONS_LARGE.ImageStream")));
 			this->PATH_VIEW_ICONS_LARGE->TransparentColor = System::Drawing::Color::Transparent;
-			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(0, L"Game.png");
-			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(1, L"file.png");
-			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(2, L"folder.png");
+			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(0, L"5_memory_card-game-controller-save-playstation-512.png");
+			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(1, L"Game.png");
+			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(2, L"file.png");
+			this->PATH_VIEW_ICONS_LARGE->Images->SetKeyName(3, L"folder.png");
 			// 
 			// PATH_VIEW_CONTEXT
 			// 
@@ -205,9 +206,10 @@ namespace PFSHDDManager {
 			// 
 			this->PATH_VIEW_ICONS_SMALL->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^>(resources->GetObject(L"PATH_VIEW_ICONS_SMALL.ImageStream")));
 			this->PATH_VIEW_ICONS_SMALL->TransparentColor = System::Drawing::Color::Transparent;
-			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(0, L"Game.png");
-			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(1, L"file.png");
-			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(2, L"folder.png");
+			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(0, L"5_memory_card-game-controller-save-playstation-512.png");
+			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(1, L"Game.png");
+			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(2, L"file.png");
+			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(3, L"folder.png");
 			// 
 			// richTextBox1
 			// 
