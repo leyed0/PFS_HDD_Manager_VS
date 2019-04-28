@@ -7,27 +7,29 @@
 
 ## Getting Started
 
-For Compiling the project, download it`s zip and open with visual studio 2017 - All settings are already done. You just need to compile it after checking pre-requisites
+For Compiling the project, download it`s zip and open with visual studio (working on 2017 and 2019 editions) - All settings are already done. You just need to compile it after checking pre-requisites
 
 ### Prerequisites
 
 You will need to have installed:
-- c++ desktop dev kit
-- latest windows 10 SDK
-- latest VC++ tools
+- Visual Studio with:
+-- c++ desktop dev kit
+-- latest windows 10 SDK
+-- latest VC++ tools
 
 ### Installing
 
-after compilling the file, you have to get the folder shell to the same folder the .exe file will be
+after compilling the file, you have to get the folder "shell" and "ICONS" to the same folder that the .exe file will be
 
 ## Running the tests
 
-For testing the software, you gonna need a ps2 formatted hdd with at least 1 partition.
+For testing the software, you gonna need a Hard Drive or a virtual drive that can be formated.
+If selected a device in the right drop doen list, you are gona be prompted to format it OR the device partitions are gonna be listed
 After connecting the device to your PC and startting the software with admin rights, cligk the Debug button. Then the text box bellow should be filled with system HDD`s list and the ps2 hdd partition list
 
 ### Break down into end to end tests
 
-This test shows if the .exe for HDL_Dumo is ok and if this is being started with the correct permissions.
+This test shows if the .exe`s for HDL_Dump and PFSShell.exe are ok and if this is being started with the correct permissions.
 
 ### And coding style tests
 
