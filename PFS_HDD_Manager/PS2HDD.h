@@ -18,14 +18,11 @@ public:
 	typedef ref struct Partition{
 		System::Single Size;
 		System::Int32 Parts;
-		System::String^ Name, ^Type;
+		System::String^ Name, ^Type, ^Startup;
+		System::Boolean Game = false, DVD;
+		System::Collections::Generic::List<File^>^ Files = nullptr;
+		File^ ParentDev;
 	}Partition;
-
-	//Base info for game partitions
-	typedef ref struct Game:Partition {
-		System::Boolean DVD;
-		String^ Flags, ^ Startup;
-	}Game;
 
 	//device Name: "hddx:" and Size are applicable to any device.
 	//Used, Available and partition List are applicable only for PS2 HDD`s - the boolean PS2 defines if it is a PFS formatted device
@@ -33,12 +30,9 @@ public:
 		System::String^ Name;
 		System::Int32 Size, Used, Available;
 		System::Boolean PFS;
-		System::Collections::Generic::List <String^>^ Partition = gcnew System::Collections::Generic::List <String^>; //temp
-		System::Collections::Generic::List <PS2HDD::Partition^>^ Partitions;
-		System::Collections::Generic::List <PS2HDD::Game^>^ Games;
+		System::Collections::Generic::List <PS2HDD::Partition^>^ Partitions = nullptr;
 	}Device;
 #pragma endregion Struct definitions
-	void File(Partition^ Orig) { return; };
 
 #pragma region Variables
 	//list all the disk drives found on system
@@ -64,7 +58,11 @@ public:
 	//list the system devices using HDL_Dump
 	System::Void Query();
 
-	System::Void Query_Part_Path(Device^ Dev, Partition^ Pt);
+	System::Void Query_Part_Path(Device^ Dev, Partition^ Part, File^ Parent);
+
+	System::Void Query_Part_Path(File^ Dev, File^ Part);
+
+	System::Void Query_Childs(File^ file);
 
 	//list the partitions in the given device
 	System::Void Query_Part(Device^ Dev);
@@ -73,10 +71,10 @@ public:
 	System::Void HDL_OutputDataReceived(System::Object^ sender, System::EventArgs^ e) { return;};
 
 	//Get Table of Contents of a PS2 device. Uses HDL_Dump (could use pfsshell too)
-	Void GetTOC(Device^);
+	//Void GetTOC(Device^);
 
 	//Get Info over an specific partition
-	Void GetPartitionInfo(Device^);
+	//Void GetPartitionInfo(Device^);
 
 	//Get Info over an ISO image on the host PC using HDL_Dump`s "cdvd_info2".
 	//Get if the ISO is a dvd or a cd, it`s size and It startup name (SLUS_XXX.XX)
@@ -87,6 +85,9 @@ public:
 
 	//gets device by its name
 	Device^ GetDevName(String^ Name);
+
+	//gets partition by its name
+	Partition^ GetPartName(Device^ Dev,String^ Name);
 
 	//OK
 	//initializes device into pfs filesystem with 128mb MBR partition

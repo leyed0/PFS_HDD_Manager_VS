@@ -4,13 +4,29 @@ ref class File
 public:
 	//Files
 	System::String^ Name, ^ Path;
-	enum class Types { File, Folder }Type;
+	enum class Types { File, Folder, Device, Partition, Game }Type;
 	System::String^ Extension = "";
 	System::Int32 Size;
-	File^ Parent, ^ Root;
-	System::Collections::Generic::List <File^>^ Childs;
+	File^ Parent = nullptr, ^ Root, ^PartRoot = nullptr;
+	System::Collections::Generic::List <File^>^ Childs = nullptr;
 
-	File(System::String^ Name) { this->Name = Name; this->Type = Types::Folder; };
-	File(System::String^ Name, File^ Parent, File^ Root) { this->Name = Name; this->Type = Types::Folder; this->Parent = Parent; this->Root = Root; this->Parent->Childs->Add(this); };
-	File(System::String^ Name, System::String^ Extension, System::Int32 Size, File^ Parent) { this->Name = Name; this->Extension = Extension; this->Size = Size; this->Parent = Parent; this->Root = this->Parent->Root;};
+	//Creates a Device typed File (usable for Devices)
+	File(System::String^ Name) { File::Name = Name; File::Type = Types::Device; File::Root = this; };
+	//Creates a File with given type and Parent - The root is reused from Parent(usable for Partitions And Folders)
+	File(System::String^ Name, Types Type, File^ Parent) { File::Name = Name; File::Type = Type; File::Parent = Parent; File::Root = Parent->Root; };
+	//Creates a File with given type and Parent - The root is reused from Parent(usable for Partitions And Folders)
+	File(System::String^ Name, Types Type, File^ Parent, bool Root) { File::Name = Name; File::Type = Type; File::Parent = Parent; File::Root = Parent->Root; File::PartRoot = this; };
+	//Creates a File with given type and Parent and Root (usable for Partitions And Folders)
+	File(System::String^ Name, Types Type, File^ Parent, File^ Root) { File::Name = Name; File::Type = Type; File::Parent = Parent, File::Root = Root;};
+	//Creates an actual File, With Name, Extension and Size - Root is given by its parent
+	File(System::String^ Name, System::String^ Extension, System::Int32 Size, File^ Parent) { File::Name = Name; File::Extension = Extension; File::Size = Size; File::Parent = Parent; File::Root = File::Parent->Root;};
+	
+	File^ GetChildName(System::String^ Name) {
+		if (this->Childs == nullptr) return nullptr;
+		for each (File^ child in this->Childs)
+		{
+			if (child->Name == Name) return child;
+		}
+		return nullptr;
+	};
 };

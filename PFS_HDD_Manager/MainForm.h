@@ -35,13 +35,15 @@ namespace PFSHDDManager {
 			}
 		}
 	private: PS2HDD::Device^ CurrDev;
+	private: PS2HDD::Partition^ CurrPart;
 	private: System::Diagnostics::Process^ PFSShell;
 	private: System::Diagnostics::Process^ HDLDump;
 	private: PS2HDD^ HDD;
+	private: System::Collections::Generic::Stack <System::String^>^ Path1History;
+	private: System::Collections::Generic::Stack <File^>^ Path2History;
 	//BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
-	private: System::Collections::Generic::Stack <System::String^>  ^History;
 	private: System::Windows::Forms::ImageList^  PATH_VIEW_ICONS_LARGE;
 	private: System::Windows::Forms::ContextMenuStrip^  PATH_VIEW_CONTEXT;
 	private: System::Windows::Forms::ToolStripMenuItem^  exibiçãoToolStripMenuItem;
@@ -80,6 +82,9 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::ComboBox^ comboBox1;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::ContextMenuStrip^ TestStrip1;
+	private: System::Windows::Forms::ToolStripMenuItem^ GAME_ToolStrip_Remove;
+
 
 	private: System::ComponentModel::IContainer^ components;
 
@@ -131,6 +136,8 @@ namespace PFSHDDManager {
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->TestStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->GAME_ToolStrip_Remove = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
@@ -140,6 +147,7 @@ namespace PFSHDDManager {
 			this->PartitionManagerTab->SuspendLayout();
 			this->tableLayoutPanel4->SuspendLayout();
 			this->tableLayoutPanel5->SuspendLayout();
+			this->TestStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// PATH_VIEW_ICONS_LARGE
@@ -341,7 +349,6 @@ namespace PFSHDDManager {
 			// PATH_VIEW2
 			// 
 			this->PATH_VIEW2->AllowDrop = true;
-			this->PATH_VIEW2->ContextMenuStrip = this->PATH_VIEW_CONTEXT;
 			this->PATH_VIEW2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->PATH_VIEW2->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
 			this->PATH_VIEW2->Location = System::Drawing::Point(447, 36);
@@ -350,6 +357,7 @@ namespace PFSHDDManager {
 			this->PATH_VIEW2->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
 			this->PATH_VIEW2->TabIndex = 7;
 			this->PATH_VIEW2->UseCompatibleStateImageBehavior = false;
+			this->PATH_VIEW2->DoubleClick += gcnew System::EventHandler(this, &MainForm::PATH_VIEW2_DoubleClick);
 			// 
 			// tableLayoutPanel3
 			// 
@@ -528,6 +536,19 @@ namespace PFSHDDManager {
 			this->button3->Text = L"button3";
 			this->button3->UseVisualStyleBackColor = true;
 			// 
+			// TestStrip1
+			// 
+			this->TestStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->GAME_ToolStrip_Remove });
+			this->TestStrip1->Name = L"TestStrip1";
+			this->TestStrip1->Size = System::Drawing::Size(181, 48);
+			// 
+			// GAME_ToolStrip_Remove
+			// 
+			this->GAME_ToolStrip_Remove->Name = L"GAME_ToolStrip_Remove";
+			this->GAME_ToolStrip_Remove->Size = System::Drawing::Size(180, 22);
+			this->GAME_ToolStrip_Remove->Text = L"Remove";
+			this->GAME_ToolStrip_Remove->Click += gcnew System::EventHandler(this, &MainForm::GAME_ToolStrip_Remove_Click);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -552,6 +573,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel4->ResumeLayout(false);
 			this->tableLayoutPanel5->ResumeLayout(false);
 			this->tableLayoutPanel5->PerformLayout();
+			this->TestStrip1->ResumeLayout(false);
 			this->ResumeLayout(false);
 
 		}
@@ -578,6 +600,8 @@ namespace PFSHDDManager {
 	private: System::Void BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void ListPS2HDD();
 	private: System::Void DRIVE_LTR2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-
+	private: System::Void PATH_VIEW2_DoubleClick(System::Object^ sender, System::EventArgs^ e);
+			 System::Void ViewPFSPath();
+	private: System::Void GAME_ToolStrip_Remove_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }
