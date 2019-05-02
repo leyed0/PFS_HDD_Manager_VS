@@ -1,4 +1,4 @@
-V0.16.13.5{
+V0.16.13.5
 -ADDED:
  --Right click menu in right explorer
  ---Remove Option: Delete the selected File - works only for files - not folders
@@ -29,7 +29,7 @@ V0.16.13.5{
  --Identify game ISO`s with the game icon
 
 
-V0.12.7.3{
+V0.12.7.3
 -ADDED:
  --Now, when a device is selected in the right side of the GUI, in the case it is PFS formated, it lists the partitions in the device
  --Implemented Game and Partition structs usage
@@ -51,7 +51,7 @@ V0.12.7.3{
  --Identify game ISO`s with the game icon
 
 
-V0.6.6.2{
+V0.6.6.2
 -Added:
  --Now, when a device is selected in the right side of the GUI, in the case that the device is not PFS ready, the user will be prompted to fomat it in the PFS system
  ---It will be anoyingly repeat asking if the user is sure about this, and then format the device using PFSShell functions
@@ -75,7 +75,7 @@ V0.6.6.2{
  --Implement the usage of the "Partition" and "Game" structs
  --Implement the view of the PFS Partitions and files in the right side of GUI
 
-V0.4.3.2{
+V0.4.3.2
 -Added:
  --Filesystem libs
  ---classes:
@@ -100,7 +100,7 @@ V0.4.3.2{
 -Todo:
 -read https://semver.org/spec/v2.0.0.html }
 
-V: 0.0.0.0{
+V: 0.0.0.0
 -Added:
  --Added this Changelog file
  --Added the README file
