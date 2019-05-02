@@ -1,3 +1,34 @@
+V0.16.13.5{
+	ADDED:
+		Right click menu in right explorer
+			Remove Option: Delete the selected File - works only for files - not folders
+		Specific function to populate the right explorer(PFS_View)
+		history on PFS_View
+		Function to use the back button on PFS_View
+		Now the PFS path is shown in the text bar
+
+	CHANGED:
+		Every Query Function:
+			Query()
+			Query_Part()
+			Query_File_Path
+			Now they are using a folder structure, to make easier to manipulate the explorer
+		Some object names - there are more to change
+		now, everytime PFS_View is updated, the system rescan the device to make sure it's showing the current state of device
+
+	FIXED:
+		Bug in the file listing process
+		Path being written in the wrong format
+
+
+	REMOVED:
+		"Files" atribute from partition struct
+
+	TODO:
+		Implement method to insert the desired path and click the button "go"
+		Identify game ISO`s with the game icon
+
+
 V0.12.7.3{
 	ADDED:
 		Now, when a device is selected in the right side of the GUI, in the case it is PFS formated, it lists the partitions in the device

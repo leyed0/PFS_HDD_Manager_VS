@@ -20,8 +20,8 @@ public:
 		System::Int32 Parts;
 		System::String^ Name, ^Type, ^Startup;
 		System::Boolean Game = false, DVD;
-		System::Collections::Generic::List<File^>^ Files = nullptr;
-		File^ ParentDev;
+		File^ PartFile;
+
 	}Partition;
 
 	//device Name: "hddx:" and Size are applicable to any device.
@@ -30,6 +30,7 @@ public:
 		System::String^ Name;
 		System::Int32 Size, Used, Available;
 		System::Boolean PFS;
+		File^ DevFile;
 		System::Collections::Generic::List <PS2HDD::Partition^>^ Partitions = nullptr;
 	}Device;
 #pragma endregion Struct definitions
@@ -58,14 +59,18 @@ public:
 	//list the system devices using HDL_Dump
 	System::Void Query();
 
-	System::Void Query_Part_Path(Device^ Dev, Partition^ Part, File^ Parent);
-
-	System::Void Query_Part_Path(File^ Dev, File^ Part);
-
-	System::Void Query_Childs(File^ file);
-
 	//list the partitions in the given device
 	System::Void Query_Part(Device^ Dev);
+
+
+	//System::Void Query_Part_Path(Device^ Dev, Partition^ Part);
+
+	System::Void Query_File_Path(File^ file);
+
+	// System::Void Query_Part_Path(File^ Dev, File^ Part);
+
+	//System::Void Query_Childs(File^ file);
+
 
 	//test
 	System::Void HDL_OutputDataReceived(System::Object^ sender, System::EventArgs^ e) { return;};
@@ -84,10 +89,11 @@ public:
 	System::String^ Debug();
 
 	//gets device by its name
-	Device^ GetDevName(String^ Name);
+	Device^ GetDevByName(String^ Name);
+
 
 	//gets partition by its name
-	Partition^ GetPartName(Device^ Dev,String^ Name);
+	Partition^ GetPartByName(Device^ Dev,String^ Name);
 
 	//OK
 	//initializes device into pfs filesystem with 128mb MBR partition
@@ -97,8 +103,6 @@ public:
 	System::Void MkPart(String^ Dev, String^ PartName, int Size);
 	
 	//void PfsShell_OutputDataReceived(System::Object^ sender, System::Diagnostics::DataReceivedEventArgs^ e);
-
-
 
 	System::Void test();
 
@@ -151,7 +155,7 @@ public:
 
 	//OK
 	//Removes the given file from the given path, partition and device
-	System::Void PFS_RM(Device^ Dev, String^ Part, String^ Dest, String^ Name);
+	System::Void PFS_RM(File^);
 
 	//OK
 	//Removes the given file from the given path, partition and device

@@ -44,7 +44,7 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 
 System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, System::EventArgs ^ e)
 {
-	Path2History = gcnew System::Collections::Generic::Stack <File^>;
+	PFSHistory = gcnew System::Collections::Generic::Stack <File^>;
 	Path1History = gcnew System::Collections::Generic::Stack <System::String^>;
 	DRIVE_LTR->Items->AddRange(System::IO::Directory::GetLogicalDrives());
 	Path = System::IO::Directory::GetLogicalDrives()[0];
@@ -181,13 +181,9 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedValueChanged(System::Obj
 }
 
 System::Void PFSHDDManager::MainForm::BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e) {
-	array<IO::DriveInfo^>^ test = IO::DriveInfo::GetDrives();
-	MessageBox::Show(Convert::ToString( test->Length));
-	//for each (IO::DriveInfo^ var in test)
-	//{
-	//	DRIVE_LTR2->Items->Add(var->Name);
-	//	//HDD
-	//}
+	//array<IO::DriveInfo^>^ test = IO::DriveInfo::GetDrives();
+	//MessageBox::Show(Convert::ToString( test->Length));
+	return;
 }
 
 System::Void PFSHDDManager::MainForm::ListPS2HDD() {
@@ -201,8 +197,7 @@ System::Void PFSHDDManager::MainForm::ListPS2HDD() {
 //must be separated!!!!!!!
 System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
 {
-	Path2History->Push(gcnew File(DRIVE_LTR2->Text));
-	CurrDev = HDD->GetDevName(DRIVE_LTR2->Text);
+	CurrDev = HDD->GetDevByName(DRIVE_LTR2->Text);
 	if (!CurrDev->PFS) {
 		if (MessageBox::Show("The selected device is NOT a PS2 Device. Blank and Create PS2 APA Now?", "Non PS2 Device", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
 			&& MessageBox::Show("Are You sure ?", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK
@@ -211,94 +206,125 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Ob
 			&& MessageBox::Show("allright then", "Error", System::Windows::Forms::MessageBoxButtons::OKCancel) == System::Windows::Forms::DialogResult::OK)
 		HDD->InitDev(CurrDev);
 	}
+	PFSHistory->Push(CurrDev->DevFile);
 	ViewPFSPath();
 }
 
 
-System::Void PFSHDDManager::MainForm::PATH_VIEW2_DoubleClick(System::Object^ sender, System::EventArgs^ e)
+System::Void PFSHDDManager::MainForm::PFS_View_DoubleClick(System::Object^ sender, System::EventArgs^ e)
 {
-	if (Path2History->Peek()->Type == File::Types::Device){
-		if(Path2History->Peek()->GetChildName(PATH_VIEW2->SelectedItems[0]->Text)->Type == File::Types::Game)TestStrip1->Show(MousePosition.X, MousePosition.Y);
+
+	if (PFSHistory->Peek()->Type == File::Types::Device){
+		if(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::Game)TestStrip1->Show(MousePosition.X, MousePosition.Y);
 		else {
-			Path2History->Push(Path2History->Peek()->GetChildName(PATH_VIEW2->SelectedItems[0]->Text));
+			PFSHistory->Push(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text));
 			ViewPFSPath();
 		}
 	}
 	else {
-		if(Path2History->Peek()->GetChildName(PATH_VIEW2->SelectedItems[0]->Text)->Type == File::Types::File)TestStrip1->Show(MousePosition.X, MousePosition.Y);
-		if (Path2History->Peek()->GetChildName(PATH_VIEW2->SelectedItems[0]->Text)->Type == File::Types::Folder) {
-			Path2History->Push(Path2History->Peek()->GetChildName(PATH_VIEW2->SelectedItems[0]->Text));
+		if(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::File)TestStrip1->Show(MousePosition.X, MousePosition.Y);
+		if (PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::Folder) {
+			PFSHistory->Push(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text));
 			ViewPFSPath();
 		}
 	}
 	//lista arquivos
-	//HDD->Query_Part_Path(CurrDev, HDD->GetPartName(CurrDev, PATH_VIEW2->SelectedItems[0]->Text));
+	//HDD->Query_Part_Path(CurrDev, HDD->GetPartName(CurrDev, PFS_View->SelectedItems[0]->Text));
 	
 	return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::ViewPFSPath() {
-	PATH_VIEW2->Clear();
+	HDD->Query();
+	PFS_View->Clear();
 	System::Windows::Forms::ImageList^ IMAGELIST;
-	if (PATH_VIEW2->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
-	if (PATH_VIEW2->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
+	if (PFS_View->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
+	if (PFS_View->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
 
 	//CurrDev = HDD->GetDevName(DRIVE_LTR2->Text);
-	CurrDev = HDD->GetDevName(Path2History->Peek()->Root->Name);
-	if(CurrDev->PFS) switch (Path2History->Peek()->Type)
-	{
-	case File::Types::Device:
-		HDD->Query_Part(CurrDev);
-		Path2History->Peek()->Childs = gcnew System::Collections::Generic::List <File^>;
-		for each (PS2HDD::Partition^ part in CurrDev->Partitions)
+	//CurrDev = HDD->GetDevName(PFSHistory->Peek()->Root->Name);
+	if (CurrDev->PFS) {
+		TXTBX_PATH2->Text = PFSHistory->Peek()->Path;
+		switch (PFSHistory->Peek()->Type)
 		{
-			if(part->Game) Path2History->Peek()->Childs->Add(gcnew File(part->Name, File::Types::Game, Path2History->Peek(), true));
-			else Path2History->Peek()->Childs->Add(gcnew File(part->Name, File::Types::Partition, Path2History->Peek(), true));
-			
+		case File::Types::Device:
+			HDD->Query_Part(CurrDev);
+			for each (File ^ file in CurrDev->DevFile->Childs)
+			{
+				if (file->Type == File::Types::Game)PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 3);
+				else PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 1);
+			}
+			break;
+		case File::Types::Partition:
+			CurrPart = HDD->GetPartByName(CurrDev, PFSHistory->Peek()->Name);
+			if (HDD->GetPartByName(CurrDev, PFSHistory->Peek()->Name)->Type->Contains("0001")) {
+				System::Windows::Forms::MessageBox::Show("the selected partition is not in PFS System. Initialize it now?", "Non PFS Partition", System::Windows::Forms::MessageBoxButtons::YesNo);
+			}
+			//CurrPart = HDD->GetPartName(CurrDev, PFSHistory->Peek()->PartRoot->Name);
+			PFSHistory->Peek()->Childs;
+			HDD->Query_File_Path(PFSHistory->Peek());
+			for each (File ^ file in PFSHistory->Peek()->Childs)
+			{
+				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
+				if (file->Type == File::Types::Folder) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 1);
+			}
+			break;
+		case File::Types::File:
+			break;
+		case File::Types::Folder:
+			for each (File ^ file in PFSHistory->Peek()->Childs)
+			{
+				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
+				if (file->Type == File::Types::Folder) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 1);
+			}
+			break;
 
-			if (part->Game)PATH_VIEW2->Items->Add(part->Name, IMAGELIST->Images->Count - 3);
-			else PATH_VIEW2->Items->Add(part->Name, IMAGELIST->Images->Count - 1);
+		default:
+			break;
 		}
-		break;
-	case File::Types::Partition:
-		//CurrPart = HDD->GetPartName(CurrDev, Path2History->Peek()->PartRoot->Name);
-		CurrPart = HDD->GetPartName(CurrDev, Path2History->Peek()->Name);
-		HDD->Query_Part_Path(CurrDev, CurrPart, Path2History->Peek());
-		for each (File ^ file in CurrPart->Files)
-		{
-			file->Parent = Path2History->Peek();
-			file->PartRoot = Path2History->Peek();
-			file->Root = Path2History->Peek()->Parent;
-			if(file->Type == File::Types::File) PATH_VIEW2->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
-			if (file->Type == File::Types::Folder) PATH_VIEW2->Items->Add(file->Name, IMAGELIST->Images->Count - 1);
-		}
-		Path2History->Peek()->Childs = CurrPart->Files;
-		break;
-	case File::Types::File:
-		break;
-	case File::Types::Folder:
-
-		break;
-
-	default:
-		break;
 	}
 	/*if (CurrDev->PFS) {
 		HDD->Query_Part(CurrDev);
 		for each (PS2HDD::Partition ^ part in CurrDev->Partitions)
 		{
-			if (part->Game)PATH_VIEW2->Items->Add(part->Name, IMAGELIST->Images->Count - 3);
-			else PATH_VIEW2->Items->Add(part->Name, IMAGELIST->Images->Count - 1);
+			if (part->Game)PFS_View->Items->Add(part->Name, IMAGELIST->Images->Count - 3);
+			else PFS_View->Items->Add(part->Name, IMAGELIST->Images->Count - 1);
 		}
 	}*/
 }
 
 System::Void PFSHDDManager::MainForm::GAME_ToolStrip_Remove_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	HDD->HDLDeletePart(CurrDev, HDD->GetPartName(CurrDev, PATH_VIEW2->SelectedItems[0]->Text));
-	//must call separated version
+	switch (PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type)
+	{
+	case File::Types::File:
+		HDD->PFS_RM(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text));
+		break;
+	default:
+		break;
+	}
 	ViewPFSPath();
 }
+
+System::Void PFSHDDManager::MainForm::BTN_BACK2_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	if (PFSHistory->Count > 1) {
+		PFSHistory->Pop();
+		ViewPFSPath();
+	}
+	
+}
+
+System::Void PFSHDDManager::MainForm::PFS_View_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
+{
+}
+
+System::Void PFSHDDManager::MainForm::PFS_View_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
+{
+	if (e->Button == Windows::Forms::MouseButtons::Right && PFS_View->SelectedItems->Count == 0)
+		PFS_MainStrip->Show(MousePosition.X, MousePosition.Y);
+}
+
 
 /*Readings:
 0x0001 00000000.:  1   128MB __mbr
