@@ -25,10 +25,9 @@ PS2HDD::PS2HDD()
 	HDLDump->StartInfo->RedirectStandardOutput = true;
 	HDLDump->EnableRaisingEvents = true;
 	//this->HDLDump->OutputDataReceived += gcnew System::Diagnostics::DataReceivedEventHandler(this, &PS2HDD::HDL_OutputDataReceived);
-
-	devices = gcnew System::Collections::Generic::List <Device^>;
 }
 System::Void PS2HDD::Query() {
+	devices = gcnew System::Collections::Generic::List <Device^>;
 	HDLDump->StartInfo->Arguments = "query";
 	HDLDump->Start();
 	output = HDLDump->StandardOutput->ReadToEnd();
@@ -50,155 +49,87 @@ System::Void PS2HDD::Query() {
 				tmpstr = tmpstr->Substring(0, tmpstr->IndexOf(" "));
 				tmp->Size = Int32::Parse(tmpstr);
 				tmp->Name = tmp->Name->Substring(0, tmp->Name->IndexOf(":") + 1);
+				tmp->DevFile = gcnew File(tmp->Name);
 				devices->Add(tmp);
 			}
 		}
 	} while (!tmp->Name->Contains("Optical"));
-	//HDLDump->Kill();
-}
-
-System::Void PS2HDD::Query_Part_Path(Device^ Dev, Partition^ Part, File^ Parent)
-{
-	File^ CurrPath = nullptr;
-	CurrPath = gcnew File(Part->Name);
-	if (Part->Type->Contains("0001")) {
-		System::Windows::Forms::MessageBox::Show("the selected partition is not in PFS System. Initialize it now?","Non PFS Partition", System::Windows::Forms::MessageBoxButtons::YesNo);
-	}
-	Part->Files = gcnew System::Collections::Generic::List < File^>;
-	if (Part->Type->Contains("0100")) {
-		PFSShell->Start();
-		PFSShell->StandardInput->WriteLine("device " + Dev->Name);
-		PFSShell->StandardInput->WriteLine("mount " + Part->Name);
-		PFSShell->StandardInput->WriteLine("ls");
-		PFSShell->StandardInput->WriteLine("exit");
-
-		String^ tmp = PFSShell->StandardOutput->ReadToEnd();
-		//tmp += PFSShell->StandardError->ReadToEnd();
-
-		System::IO::StringReader^ tmpStringReader = gcnew System::IO::StringReader(tmp->Substring(tmp->IndexOf(" .")));
-		output = tmpStringReader->ReadLine();
-		File^ file;
-		do {
-			output = tmpStringReader->ReadLine();
-			if (output->Contains("/# ")) break;
-			if (output->Contains(" .") || output->Contains("  ..")) continue;
-			if (output->Contains("-rw-rw-rw-"))file = gcnew File(output->Substring(38)->Trim(), output->Substring(output->LastIndexOf(".")+1)->Trim(), 64, CurrPath);
-			if (output->Contains("drwxrwxrwx"))file = gcnew File(output->Substring(38)->Trim(), File::Types::Folder, CurrPath);
-			
-			Part->Files->Add(file);
-		} while (output != "/# ");
-
-		for each (File^ file  in Part->Files)
-		{
-			if(file->Type != File::Types::File)
-		}
-	}
-}
-
-System::Void PS2HDD::Query_Part_Path(File^ Dev, File^ Part)
-{
-	File^ CurrPath = nullptr;
-	CurrPath = gcnew File(Part->Name);
-	if (Part->Type->Contains("0001")) {
-		System::Windows::Forms::MessageBox::Show("the selected partition is not in PFS System. Initialize it now?", "Non PFS Partition", System::Windows::Forms::MessageBoxButtons::YesNo);
-	}
-	Part->Files = gcnew System::Collections::Generic::List < File^>;
-	if (Part->Type->Contains("0100")) {
-		PFSShell->Start();
-		PFSShell->StandardInput->WriteLine("device " + Dev->Name);
-		PFSShell->StandardInput->WriteLine("mount " + Part->Name);
-		PFSShell->StandardInput->WriteLine("ls");
-		PFSShell->StandardInput->WriteLine("exit");
-
-		String^ tmp = PFSShell->StandardOutput->ReadToEnd();
-		//tmp += PFSShell->StandardError->ReadToEnd();
-
-		System::IO::StringReader^ tmpStringReader = gcnew System::IO::StringReader(tmp->Substring(tmp->IndexOf(" .")));
-		output = tmpStringReader->ReadLine();
-		File^ file;
-		do {
-			output = tmpStringReader->ReadLine();
-			if (output->Contains("/# ")) break;
-			if (output->Contains(" .") || output->Contains("  ..")) continue;
-			if (output->Contains("-rw-rw-rw-"))file = gcnew File(output->Substring(38)->Trim(), output->Substring(output->LastIndexOf(".") + 1)->Trim(), 64, CurrPath);
-			if (output->Contains("drwxrwxrwx"))file = gcnew File(output->Substring(38)->Trim(), File::Types::Folder, CurrPath);
-
-			Part->Files->Add(file);
-		} while (output != "/# ");
-
-		for each (File ^ file  in Part->Files)
-		{
-			if (file->Type != File::Types::File)
-		}
-	}
-}
-
-
-System::Void PS2HDD::Query_Childs(File^ file) {
-
-	if (file->Parent->Type == File::Types::Partition) file->Path = file->Name;
-	if(file->Parent->Type == File::Types::Folder) file->Path = file->Parent->Path + "\\" + file->Name;
-
-	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
-	PFSShell->StandardInput->WriteLine("mount " + Part->Name);
-	PFSShell->StandardInput->WriteLine("cd " + Part->Path);
-	PFSShell->StandardInput->WriteLine("ls");
-	PFSShell->StandardInput->WriteLine("exit");
 }
 
 System::Void PS2HDD::Query_Part(Device^ Dev) {
 	if (Dev->PFS) {
+		Dev->Partitions = gcnew System::Collections::Generic::List < PS2HDD::Partition^>;
+		Dev->DevFile->Childs = gcnew System::Collections::Generic::List<File^>;
 		HDLDump->StartInfo->Arguments = "toc " + Dev->Name;
 		HDLDump->Start();
 		output = HDLDump->StandardOutput->ReadToEnd();
 		System::IO::StringReader^ StringReaderr = gcnew System::IO::StringReader(output->Substring(output->IndexOf("0x")));
-		Dev->Partitions = gcnew System::Collections::Generic::List < PS2HDD::Partition^>;
-		do{
+		do {
 			Partition^ part = gcnew Partition;
 			output = StringReaderr->ReadLine();
-			if ( !output->Contains("Total ")) {
+			if (!output->Contains("Total ")) {
 				part->Type = output->Substring(2, 4);
-				part->Size = Int32::Parse(output->Substring(20)->Substring(0, 9)->Trim()->TrimEnd('M','B'));
+				part->Size = Int32::Parse(output->Substring(20)->Substring(0, 9)->Trim()->TrimEnd('M', 'B'));
 				part->Parts = 1;
-				part->Name = output->Substring(output->LastIndexOf("MB")+2)->Trim();
-				part->Game = output->Contains("0x1337");
+				part->Name = output->Substring(output->LastIndexOf("MB") + 2)->Trim();
+				File^ tmp;
+				if (part->Type->Contains("1337"))tmp = gcnew File(part->Name, File::Types::Game, Dev->DevFile, Dev->DevFile);
+				if (part->Type->Contains("0001"))tmp = gcnew File(part->Name, File::Types::PartitionNull, Dev->DevFile, Dev->DevFile);
+				if (part->Type->Contains("0100"))tmp = gcnew File(part->Name, File::Types::Partition, Dev->DevFile, Dev->DevFile);
+
+				tmp->Root = Dev->DevFile;
+				tmp->PartRoot = tmp;
+				tmp->Path = tmp->Name;
+				tmp->Path = tmp->Name;
+
+				part->PartFile = tmp;
 				Dev->Partitions->Add(part);
+				Dev->DevFile->Childs->Add(part->PartFile);
 			}
 		} while (!output->Contains("Total "));
 	}
 }
 
-//System::Void PS2HDD::GetTOC(Device^ dev) {
-//	//PS2HDD();
-//	HDLDump->StartInfo->Arguments = "toc " + dev->Name;
-//	HDLDump->Start(); 
-//	String^ tmp = HDLDump->StandardOutput->ReadToEnd();
-//
-//	System::IO::StringReader^ tmpStringReader = gcnew System::IO::StringReader(tmp);
-//	tmpStringReader->ReadLine();
-//	do {
-//		dev->Partition->Add(tmpStringReader->ReadLine());
-//	} while (!dev->Partition[dev->Partition->Count-1]->Contains("Total slice"));
-//}
+System::Void PS2HDD::Query_File_Path(File^ file)
+{
+	file->Childs = gcnew System::Collections::Generic::List<File^>;
+	PFSShell->Start();
+	PFSShell->StandardInput->WriteLine("device " + file->Root->Name);
+	PFSShell->StandardInput->WriteLine("mount " + file->PartRoot->Name);
+	String^ teste = file->Path->Substring(file->Path->IndexOf("/") + 1);
+	if(file->Type == File::Types::Folder) PFSShell->StandardInput->WriteLine("cd " + file->Path->Substring(file->Path->IndexOf("/")+1));
+	PFSShell->StandardInput->WriteLine("ls");
+	PFSShell->StandardInput->WriteLine("exit");
+
+	output = PFSShell->StandardOutput->ReadToEnd();
+	System::IO::StringReader^ tmpStringReader = gcnew System::IO::StringReader(output->Substring(output->IndexOf(" ..")));
+	output = tmpStringReader->ReadLine();
+	File^ tmpFile;
+	do {
+		output = tmpStringReader->ReadLine();
+		if (output->Contains("# ")) break;
+		if ((!output->Contains("drwxrwxrwx")&& !output->Contains("-rw-rw-rw-"))|| output->Contains(" ..")) continue;
+		if (output->Contains("-rw-rw-rw-"))tmpFile = gcnew File(output->Substring(38)->Trim(), output->Substring(output->LastIndexOf(".") + 1)->Trim(), 64, file);
+		if (output->Contains("drwxrwxrwx"))tmpFile = gcnew File(output->Substring(38)->Trim(), File::Types::Folder, file);
+		tmpFile->PartRoot = file->PartRoot;
+		tmpFile->Root = file->Root;
+		tmpFile->Path = file->Path + "/" + tmpFile->Name;
+
+		file->Childs->Add(tmpFile);
+	} while (output != "# ");
+	for each (File^ child in file->Childs)
+	{
+		if(child->Type == File::Types::Folder) Query_File_Path(child);
+	}
+}
 
 
 System::String^ PS2HDD::Debug() {
-	//Query();
 	String^ tmp;
-	/*for (int i = 0; i < devices->Count; i++) {
-		tmp += devices[i]->Name + "\t" + devices[i]->Size + "\n";
-		if (devices[i]->PFS) {
-			for (int j=0; j<devices[i]->Partition->Count; j++)
-			{
-				tmp += ("\t") + devices[i]->Partition[j] + "\n";
-			}
-		}
-	}*/
 	return tmp;
 }
 
-PS2HDD::Device^ PS2HDD::GetDevName(String^ Name)
+PS2HDD::Device^ PS2HDD::GetDevByName(String^ Name)
 {
 	for each (Device^  var in devices)
 	{
@@ -208,7 +139,7 @@ PS2HDD::Device^ PS2HDD::GetDevName(String^ Name)
 	return nullptr;
 }
 
-PS2HDD::Partition^ PS2HDD::GetPartName(Device^ Dev, String^ Name)
+PS2HDD::Partition^ PS2HDD::GetPartByName(Device^ Dev, String^ Name)
 {
 	for each (Partition^ part in Dev->Partitions)
 	{
@@ -226,15 +157,9 @@ System::Void PS2HDD::GetCDVDInfo(String^ Path) {
 	return;
 }
 
-//System::Void PS2HDD::GetPartitionInfo(Device^ Dev) {
-//	HDLDump->StartInfo->Arguments = "info " + Dev->Name + "\"" + Dev->Partition[0];
-//	HDLDump->Start();
-//	return;
-//}
 
 System::Void PS2HDD::InitDev(Device^ Dev)
 {
-	//System::Windows::Forms::MessageBox::Show("Formatting");
 	HDLDump->StartInfo->Arguments = "initialize " + Dev->Name;
 	HDLDump->Start();
 	devices->Clear();
@@ -388,16 +313,24 @@ System::Void  PS2HDD::PFS_Puts(String^ Orig, System::Collections::Generic::List<
 	return;
 }
 
-System::Void  PS2HDD::PFS_RM(Device^ Dev, String^ Part, String^ Dest, String^ Name)
+System::Void  PS2HDD::PFS_RM(File^ file)
 {
+	String^ tmp = file->Path;
+	if (file->Parent->Type != File::Types::Partition) {
+		tmp = tmp->Substring(file->Path->IndexOf("/") + 1);
+		tmp = tmp->Substring(0, tmp->LastIndexOf("/"));
+	}
+
 	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
-	PFSShell->StandardInput->WriteLine("mount " + Part);
-	PFSShell->StandardInput->WriteLine("cd " + Dest);
-	PFSShell->StandardInput->WriteLine("rm " + Name);
+	PFSShell->StandardInput->WriteLine("device " + file->Root->Name);
+	PFSShell->StandardInput->WriteLine("mount " + file->PartRoot->Name);
+	PFSShell->StandardInput->WriteLine("cd " + tmp);
+	PFSShell->StandardInput->WriteLine("rm " + file->Name);
 	PFSShell->StandardInput->WriteLine("exit");
+	PFSShell->WaitForExit();
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
+	file->Parent->Childs->Remove(file);
 	if (output->Contains("error")) return;
 	return;
 }

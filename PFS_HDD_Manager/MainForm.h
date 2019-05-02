@@ -40,7 +40,7 @@ namespace PFSHDDManager {
 	private: System::Diagnostics::Process^ HDLDump;
 	private: PS2HDD^ HDD;
 	private: System::Collections::Generic::Stack <System::String^>^ Path1History;
-	private: System::Collections::Generic::Stack <File^>^ Path2History;
+	private: System::Collections::Generic::Stack <File^>^ PFSHistory;
 	//BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
@@ -68,7 +68,8 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::Button^  BTN_GO;
 	private: System::Windows::Forms::TextBox^  TXTBX_PATH;
 	private: System::Windows::Forms::Button^  BTN_BACK;
-	private: System::Windows::Forms::ListView^  PATH_VIEW2;
+	private: System::Windows::Forms::ListView^ PFS_View;
+
 
 	private: System::Windows::Forms::TabControl^  tabControl1;
 	private: System::Windows::Forms::TabPage^  FileManagerTab;
@@ -84,6 +85,9 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::ContextMenuStrip^ TestStrip1;
 	private: System::Windows::Forms::ToolStripMenuItem^ GAME_ToolStrip_Remove;
+	private: System::Windows::Forms::ContextMenuStrip^ PFS_MainStrip;
+	private: System::Windows::Forms::ToolStripMenuItem^ createPartitionToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ reInitializeDeviceToolStripMenuItem;
 
 
 	private: System::ComponentModel::IContainer^ components;
@@ -121,7 +125,7 @@ namespace PFSHDDManager {
 			this->TXTBX_PATH2 = (gcnew System::Windows::Forms::TextBox());
 			this->BTN_BACK2 = (gcnew System::Windows::Forms::Button());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->PATH_VIEW2 = (gcnew System::Windows::Forms::ListView());
+			this->PFS_View = (gcnew System::Windows::Forms::ListView());
 			this->tableLayoutPanel3 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->DRIVE_LTR = (gcnew System::Windows::Forms::ComboBox());
 			this->BTN_GO = (gcnew System::Windows::Forms::Button());
@@ -138,6 +142,9 @@ namespace PFSHDDManager {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->TestStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->GAME_ToolStrip_Remove = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->PFS_MainStrip = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->createPartitionToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->reInitializeDeviceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
@@ -148,6 +155,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel4->SuspendLayout();
 			this->tableLayoutPanel5->SuspendLayout();
 			this->TestStrip1->SuspendLayout();
+			this->PFS_MainStrip->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// PATH_VIEW_ICONS_LARGE
@@ -316,6 +324,7 @@ namespace PFSHDDManager {
 			this->BTN_BACK2->TabIndex = 1;
 			this->BTN_BACK2->Text = L"BACK";
 			this->BTN_BACK2->UseVisualStyleBackColor = true;
+			this->BTN_BACK2->Click += gcnew System::EventHandler(this, &MainForm::BTN_BACK2_Click);
 			// 
 			// tableLayoutPanel1
 			// 
@@ -329,7 +338,7 @@ namespace PFSHDDManager {
 				50)));
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				401)));
-			this->tableLayoutPanel1->Controls->Add(this->PATH_VIEW2, 0, 1);
+			this->tableLayoutPanel1->Controls->Add(this->PFS_View, 0, 1);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel3, 0, 0);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel2, 0, 0);
 			this->tableLayoutPanel1->Controls->Add(this->PATH_VIEW, 0, 1);
@@ -346,18 +355,20 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->TabIndex = 3;
 			this->tableLayoutPanel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::tableLayoutPanel1_Paint);
 			// 
-			// PATH_VIEW2
+			// PFS_View
 			// 
-			this->PATH_VIEW2->AllowDrop = true;
-			this->PATH_VIEW2->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->PATH_VIEW2->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
-			this->PATH_VIEW2->Location = System::Drawing::Point(447, 36);
-			this->PATH_VIEW2->Name = L"PATH_VIEW2";
-			this->PATH_VIEW2->Size = System::Drawing::Size(438, 503);
-			this->PATH_VIEW2->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
-			this->PATH_VIEW2->TabIndex = 7;
-			this->PATH_VIEW2->UseCompatibleStateImageBehavior = false;
-			this->PATH_VIEW2->DoubleClick += gcnew System::EventHandler(this, &MainForm::PATH_VIEW2_DoubleClick);
+			this->PFS_View->AllowDrop = true;
+			this->PFS_View->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->PFS_View->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
+			this->PFS_View->Location = System::Drawing::Point(447, 36);
+			this->PFS_View->Name = L"PFS_View";
+			this->PFS_View->Size = System::Drawing::Size(438, 503);
+			this->PFS_View->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
+			this->PFS_View->TabIndex = 7;
+			this->PFS_View->UseCompatibleStateImageBehavior = false;
+			this->PFS_View->DoubleClick += gcnew System::EventHandler(this, &MainForm::PFS_View_DoubleClick);
+			this->PFS_View->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseClick);
+			this->PFS_View->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseDown);
 			// 
 			// tableLayoutPanel3
 			// 
@@ -540,14 +551,35 @@ namespace PFSHDDManager {
 			// 
 			this->TestStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->GAME_ToolStrip_Remove });
 			this->TestStrip1->Name = L"TestStrip1";
-			this->TestStrip1->Size = System::Drawing::Size(181, 48);
+			this->TestStrip1->Size = System::Drawing::Size(118, 26);
 			// 
 			// GAME_ToolStrip_Remove
 			// 
 			this->GAME_ToolStrip_Remove->Name = L"GAME_ToolStrip_Remove";
-			this->GAME_ToolStrip_Remove->Size = System::Drawing::Size(180, 22);
+			this->GAME_ToolStrip_Remove->Size = System::Drawing::Size(117, 22);
 			this->GAME_ToolStrip_Remove->Text = L"Remove";
 			this->GAME_ToolStrip_Remove->Click += gcnew System::EventHandler(this, &MainForm::GAME_ToolStrip_Remove_Click);
+			// 
+			// PFS_MainStrip
+			// 
+			this->PFS_MainStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->createPartitionToolStripMenuItem,
+					this->reInitializeDeviceToolStripMenuItem
+			});
+			this->PFS_MainStrip->Name = L"PFS_MainStrip";
+			this->PFS_MainStrip->Size = System::Drawing::Size(174, 48);
+			// 
+			// createPartitionToolStripMenuItem
+			// 
+			this->createPartitionToolStripMenuItem->Name = L"createPartitionToolStripMenuItem";
+			this->createPartitionToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->createPartitionToolStripMenuItem->Text = L"Create Partition";
+			// 
+			// reInitializeDeviceToolStripMenuItem
+			// 
+			this->reInitializeDeviceToolStripMenuItem->Name = L"reInitializeDeviceToolStripMenuItem";
+			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->reInitializeDeviceToolStripMenuItem->Text = L"Re-Initialize Device";
 			// 
 			// MainForm
 			// 
@@ -574,6 +606,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel5->ResumeLayout(false);
 			this->tableLayoutPanel5->PerformLayout();
 			this->TestStrip1->ResumeLayout(false);
+			this->PFS_MainStrip->ResumeLayout(false);
 			this->ResumeLayout(false);
 
 		}
@@ -600,8 +633,11 @@ namespace PFSHDDManager {
 	private: System::Void BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void ListPS2HDD();
 	private: System::Void DRIVE_LTR2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void PATH_VIEW2_DoubleClick(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void PFS_View_DoubleClick(System::Object^ sender, System::EventArgs^ e);
 			 System::Void ViewPFSPath();
 	private: System::Void GAME_ToolStrip_Remove_Click(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void BTN_BACK2_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void PFS_View_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+private: System::Void PFS_View_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 };
 }
