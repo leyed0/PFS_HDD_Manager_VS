@@ -9,7 +9,6 @@ namespace PFSHDDManager {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-
 	/// <summary>
 	/// Sumário para MainForm
 	/// </summary>
@@ -85,9 +84,14 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::ContextMenuStrip^ TestStrip1;
 	private: System::Windows::Forms::ToolStripMenuItem^ GAME_ToolStrip_Remove;
-	private: System::Windows::Forms::ContextMenuStrip^ PFS_MainStrip;
+	private: System::Windows::Forms::ContextMenuStrip^ PFS_ContextMenu;
+
 	private: System::Windows::Forms::ToolStripMenuItem^ createPartitionToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ reInitializeDeviceToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ getToolStripMenuItem;
+
+
 
 
 	private: System::ComponentModel::IContainer^ components;
@@ -142,9 +146,11 @@ namespace PFSHDDManager {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->TestStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->GAME_ToolStrip_Remove = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->PFS_MainStrip = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->PFS_ContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->createPartitionToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->reInitializeDeviceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->getToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
@@ -155,7 +161,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel4->SuspendLayout();
 			this->tableLayoutPanel5->SuspendLayout();
 			this->TestStrip1->SuspendLayout();
-			this->PFS_MainStrip->SuspendLayout();
+			this->PFS_ContextMenu->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// PATH_VIEW_ICONS_LARGE
@@ -358,6 +364,7 @@ namespace PFSHDDManager {
 			// PFS_View
 			// 
 			this->PFS_View->AllowDrop = true;
+			this->PFS_View->ContextMenuStrip = this->PFS_ContextMenu;
 			this->PFS_View->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->PFS_View->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
 			this->PFS_View->Location = System::Drawing::Point(447, 36);
@@ -368,6 +375,7 @@ namespace PFSHDDManager {
 			this->PFS_View->UseCompatibleStateImageBehavior = false;
 			this->PFS_View->DoubleClick += gcnew System::EventHandler(this, &MainForm::PFS_View_DoubleClick);
 			this->PFS_View->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseClick);
+			this->PFS_View->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseDoubleClick);
 			this->PFS_View->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseDown);
 			// 
 			// tableLayoutPanel3
@@ -560,26 +568,39 @@ namespace PFSHDDManager {
 			this->GAME_ToolStrip_Remove->Text = L"Remove";
 			this->GAME_ToolStrip_Remove->Click += gcnew System::EventHandler(this, &MainForm::GAME_ToolStrip_Remove_Click);
 			// 
-			// PFS_MainStrip
+			// PFS_ContextMenu
 			// 
-			this->PFS_MainStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+			this->PFS_ContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
 				this->createPartitionToolStripMenuItem,
-					this->reInitializeDeviceToolStripMenuItem
+					this->reInitializeDeviceToolStripMenuItem, this->deleteToolStripMenuItem, this->getToolStripMenuItem
 			});
-			this->PFS_MainStrip->Name = L"PFS_MainStrip";
-			this->PFS_MainStrip->Size = System::Drawing::Size(174, 48);
+			this->PFS_ContextMenu->Name = L"PFS_MainStrip";
+			this->PFS_ContextMenu->Size = System::Drawing::Size(181, 114);
+			this->PFS_ContextMenu->Opening += gcnew System::ComponentModel::CancelEventHandler(this, &MainForm::PFS_ContextMenu_Opening);
 			// 
 			// createPartitionToolStripMenuItem
 			// 
 			this->createPartitionToolStripMenuItem->Name = L"createPartitionToolStripMenuItem";
-			this->createPartitionToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->createPartitionToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->createPartitionToolStripMenuItem->Text = L"Create Partition";
 			// 
 			// reInitializeDeviceToolStripMenuItem
 			// 
 			this->reInitializeDeviceToolStripMenuItem->Name = L"reInitializeDeviceToolStripMenuItem";
-			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->reInitializeDeviceToolStripMenuItem->Text = L"Re-Initialize Device";
+			// 
+			// deleteToolStripMenuItem
+			// 
+			this->deleteToolStripMenuItem->Name = L"deleteToolStripMenuItem";
+			this->deleteToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->deleteToolStripMenuItem->Text = L"Delete";
+			// 
+			// getToolStripMenuItem
+			// 
+			this->getToolStripMenuItem->Name = L"getToolStripMenuItem";
+			this->getToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->getToolStripMenuItem->Text = L"Get";
 			// 
 			// MainForm
 			// 
@@ -606,7 +627,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel5->ResumeLayout(false);
 			this->tableLayoutPanel5->PerformLayout();
 			this->TestStrip1->ResumeLayout(false);
-			this->PFS_MainStrip->ResumeLayout(false);
+			this->PFS_ContextMenu->ResumeLayout(false);
 			this->ResumeLayout(false);
 
 		}
@@ -633,11 +654,14 @@ namespace PFSHDDManager {
 	private: System::Void BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void ListPS2HDD();
 	private: System::Void DRIVE_LTR2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void PFS_View_DoubleClick(System::Object^ sender, System::EventArgs^ e);
 			 System::Void ViewPFSPath();
 	private: System::Void GAME_ToolStrip_Remove_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void BTN_BACK2_Click(System::Object^ sender, System::EventArgs^ e);
-private: System::Void PFS_View_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+
+private: System::Void PFS_View_DoubleClick(System::Object^ sender, System::EventArgs^ e);
 private: System::Void PFS_View_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+private: System::Void PFS_View_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+private: System::Void PFS_View_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+private: System::Void PFS_ContextMenu_Opening(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e);
 };
 }

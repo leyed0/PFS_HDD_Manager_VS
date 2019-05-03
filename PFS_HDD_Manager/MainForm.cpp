@@ -211,28 +211,6 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Ob
 }
 
 
-System::Void PFSHDDManager::MainForm::PFS_View_DoubleClick(System::Object^ sender, System::EventArgs^ e)
-{
-
-	if (PFSHistory->Peek()->Type == File::Types::Device){
-		if(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::Game)TestStrip1->Show(MousePosition.X, MousePosition.Y);
-		else {
-			PFSHistory->Push(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text));
-			ViewPFSPath();
-		}
-	}
-	else {
-		if(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::File)TestStrip1->Show(MousePosition.X, MousePosition.Y);
-		if (PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::Folder) {
-			PFSHistory->Push(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text));
-			ViewPFSPath();
-		}
-	}
-	//lista arquivos
-	//HDD->Query_Part_Path(CurrDev, HDD->GetPartName(CurrDev, PFS_View->SelectedItems[0]->Text));
-	
-	return System::Void();
-}
 
 System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 	HDD->Query();
@@ -315,17 +293,49 @@ System::Void PFSHDDManager::MainForm::BTN_BACK2_Click(System::Object^ sender, Sy
 	
 }
 
-System::Void PFSHDDManager::MainForm::PFS_View_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
+
+System::Void PFSHDDManager::MainForm::PFS_View_DoubleClick(System::Object^ sender, System::EventArgs^ e)
 {
 }
 
 System::Void PFSHDDManager::MainForm::PFS_View_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 {
-	if (e->Button == Windows::Forms::MouseButtons::Right && PFS_View->SelectedItems->Count == 0)
-		PFS_MainStrip->Show(MousePosition.X, MousePosition.Y);
+
 }
 
+System::Void PFSHDDManager::MainForm::PFS_View_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
+{
+}
 
+System::Void PFSHDDManager::MainForm::PFS_View_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
+{
+	if (e->Button == Windows::Forms::MouseButtons::Left) {
+		if (PFSHistory->Peek()->Type == File::Types::Device) {
+			if (PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::Game)TestStrip1->Show(MousePosition.X, MousePosition.Y);
+			else {
+				PFSHistory->Push(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text));
+				ViewPFSPath();
+			}
+		}
+		else {
+			if (PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::File)TestStrip1->Show(MousePosition.X, MousePosition.Y);
+			if (PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text)->Type == File::Types::Folder) {
+				PFSHistory->Push(PFSHistory->Peek()->GetChildName(PFS_View->SelectedItems[0]->Text));
+				ViewPFSPath();
+			}
+		}
+	}
+	//lista arquivos
+	//HDD->Query_Part_Path(CurrDev, HDD->GetPartName(CurrDev, PFS_View->SelectedItems[0]->Text));
+
+	return System::Void();
+}
+System::Void PFSHDDManager::MainForm::PFS_ContextMenu_Opening(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e)
+{
+
+	if(PFSHistory->Peek()->Type == File::Types::Folder)PFS_ContextMenu->Items[0]->Available = false;
+	return System::Void();
+}
 /*Readings:
 0x0001 00000000.:  1   128MB __mbr
 0x0100 00040000.:  1   128MB Debug
