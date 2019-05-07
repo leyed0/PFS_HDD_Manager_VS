@@ -171,6 +171,7 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="InputBox.cpp" />
     <ClCompile Include="PS2HDD.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +180,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="filesystem.h" />
+    <ClInclude Include="InputBox.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="PS2HDD.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -206,6 +210,9 @@
     <Image Include="ICONS\folder.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="InputBox.resx">
+      <DependentUpon>InputBox.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

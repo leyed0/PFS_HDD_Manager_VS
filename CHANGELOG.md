@@ -1,3 +1,27 @@
+V0.19.15.6{
+	ADDED:
+		Toolstrip Menu in PFSView
+		Buttons to transfer files beetwen host and PS2Hdd
+		Custom Made "InputBox" class to get input for folder and partition names
+
+	CHANGED:
+		Some function names in PS2HDD class
+		Renamed Second Tab
+
+	FIXED:
+		if you created a partition or file wit "spaces" on its name, the program would freeze
+
+	REMOVED:
+		Debug Button and TextBox on the window
+		last codes using "CurrentPartition"
+
+	TODO:
+		Implement Go button
+		Implement re-initialize code
+		Implement toolstip Get Button
+		Reimplement File explorer
+		Identify game ISO`s with the game icon
+
 V0.16.13.5{
 	ADDED:
 		Right click menu in right explorer

@@ -10,13 +10,13 @@ int main(array<String^>^ argv) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 	PFSHDDManager::MainForm form;
+
 	Application::Run(%form);
 	return 0;
 }
 
 System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 {
-	TXTBX_PATH->Text = Path;
 	System::Windows::Forms::ImageList^  IMAGELIST;
 	if (PATH_VIEW->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
 	if (PATH_VIEW->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
@@ -51,14 +51,6 @@ System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, Sys
 	ViewPath(Path);
 	ListPS2HDD();
 
-	return System::Void();
-}
-
-System::Void PFSHDDManager::MainForm::PATH_VIEW_DoubleClick(System::Object ^ sender, System::EventArgs ^ e)
-{
-	if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
-	Path = Path + "\\" + PATH_VIEW->SelectedItems[0]->Text;
-	ViewPath(Path);
 	return System::Void();
 }
 
@@ -125,7 +117,7 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 System::Void PFSHDDManager::MainForm::Debug_Button_Click(System::Object^  sender, System::EventArgs^  e) {
 	//HDD->PFS_Mkpart(HDD->GetDevName("hdd5:"),"Debug", 128);
 	//richTextBox1->Text = HDD->output;
-	richTextBox1->Text = HDD->Debug();
+	//richTextBox1->Text = HDD->Debug();
 
 	//PFSShell->OutputDataReceived();
 	//PFS->StartInfo->FileName = "shell\\1_090.exe";
@@ -234,13 +226,20 @@ System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 			}
 			break;
 		case File::Types::Partition:
-			CurrPart = HDD->GetPartByName(CurrDev, PFSHistory->Peek()->Name);
-			if (HDD->GetPartByName(CurrDev, PFSHistory->Peek()->Name)->Type->Contains("0001")) {
-				System::Windows::Forms::MessageBox::Show("the selected partition is not in PFS System. Initialize it now?", "Non PFS Partition", System::Windows::Forms::MessageBoxButtons::YesNo);
+			try { HDD->Query_File_Path(PFSHistory->Peek()); }
+			catch (String^ Error) { 
+				if (MessageBox::Show("the selected partition is not in PFS System. Initialize it now?",
+					"Non PFS Partition", System::Windows::Forms::MessageBoxButtons::YesNo) == Forms::DialogResult::Yes)
+					HDD->PFS_Mkfs(PFSHistory->Peek());
+				else {
+					PFSHistory->Pop();
+					ViewPFSPath();
+					return;
+				}
 			}
-			//CurrPart = HDD->GetPartName(CurrDev, PFSHistory->Peek()->PartRoot->Name);
-			PFSHistory->Peek()->Childs;
-			HDD->Query_File_Path(PFSHistory->Peek());
+
+			try { HDD->Query_File_Path(PFSHistory->Peek()); }
+			catch (String^ Error) {}
 			for each (File ^ file in PFSHistory->Peek()->Childs)
 			{
 				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
@@ -325,6 +324,8 @@ System::Void PFSHDDManager::MainForm::PFS_View_MouseDoubleClick(System::Object^ 
 			}
 		}
 	}
+	if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
+	Path = PFSHistory->Peek()->Path;
 	//lista arquivos
 	//HDD->Query_Part_Path(CurrDev, HDD->GetPartName(CurrDev, PFS_View->SelectedItems[0]->Text));
 
@@ -332,10 +333,87 @@ System::Void PFSHDDManager::MainForm::PFS_View_MouseDoubleClick(System::Object^ 
 }
 System::Void PFSHDDManager::MainForm::PFS_ContextMenu_Opening(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e)
 {
+	if (CurrDev == nullptr || !CurrDev->PFS)
+		for each (System::Windows::Forms::ToolStripItem ^ item in PFS_ContextMenu->Items)
+		{
+			item->Visible = false;
+		}
+	else {
+		for each (System::Windows::Forms::ToolStripItem ^ item in PFS_ContextMenu->Items)
+		{
+			item->Visible = true;
+		}
 
-	if(PFSHistory->Peek()->Type == File::Types::Folder)PFS_ContextMenu->Items[0]->Available = false;
+	}
 	return System::Void();
 }
+System::Void PFSHDDManager::MainForm::PATH_VIEW_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e)
+{
+	if (Char::IsControl(e->KeyChar))
+		PATH_VIEW->SelectedItems->Clear();
+		if (e->KeyChar == wchar_t::Parse(""))for each (Windows::Forms::ListViewItem^ item in PATH_VIEW->Items)
+		{
+			for each (ListViewItem^ item in PATH_VIEW->Items)
+			{
+				item->Selected = true;
+			}
+		};
+	return System::Void();
+}
+System::Void PFSHDDManager::MainForm::BTN_Put_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	if (PATH_VIEW->SelectedItems->Count > 0 && PFSHistory->Count>0 &&(PFSHistory->Peek()->Type == File::Types::Folder|| PFSHistory->Peek()->Type == File::Types::Partition))
+		for each (ListViewItem ^ item in PATH_VIEW->SelectedItems)
+		{
+			HDD->PFS_Put(Path1History->Peek(), item->Text, PFSHistory->Peek());
+		}
+}
+System::Void PFSHDDManager::MainForm::BTN_Get_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	return System::Void();
+}
+System::Void PFSHDDManager::MainForm::RemoveToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	if(PFS_View->SelectedItems->Count>0)
+		for each (ListViewItem ^ item in PFS_View->SelectedItems)
+		{
+			PFSHistory->Peek()->GetChildName(item->Text);
+			try { HDD->Remove(PFSHistory->Peek()->GetChildName(item->Text)); }
+			catch (String^ Error) { MessageBox::Show(Error); }
+		}
+	ViewPFSPath();
+}
+
+System::Void PFSHDDManager::MainForm::CreatePartitionToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	InputBox^ Name = gcnew InputBox, ^Size = gcnew InputBox;
+	if(Name->Show("Partition Name:") == Forms::DialogResult::OK)
+		if(Size->Show("Partition Size:\n(Power of 2 in MB)")== System::Windows::Forms::DialogResult::OK)
+		try { 
+		File^ tmp = HDD->PFS_Mkpart(CurrDev, Name->Text, Convert::ToInt32(Size->Text));
+		if (MessageBox::Show("Create PFS on the partition?", "Initialize?", MessageBoxButtons::YesNo) == System::Windows::Forms::DialogResult::Yes)
+			HDD->PFS_Mkfs(tmp);
+	}
+	catch (String^ Error) { MessageBox::Show(Error, "ERROR!"); }
+	ViewPFSPath();
+	return System::Void();
+}
+System::Void PFSHDDManager::MainForm::NewFolderToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	InputBox^ name = gcnew InputBox;
+	if(name->Show("Folder Name:") == Forms::DialogResult::OK)
+		HDD->PFS_MkDir(PFSHistory->Peek(), name->Text);
+	ViewPFSPath();
+}
+
+System::Void PFSHDDManager::MainForm::PATH_VIEW_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
+{
+	if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
+	Path = Path + "\\" + PATH_VIEW->SelectedItems[0]->Text;
+	ViewPath(Path);
+	return System::Void();
+}
+
 /*Readings:
 0x0001 00000000.:  1   128MB __mbr
 0x0100 00040000.:  1   128MB Debug

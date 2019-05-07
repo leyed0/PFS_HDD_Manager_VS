@@ -1,5 +1,6 @@
 #pragma once
 #include"PS2HDD.h"
+#include"InputBox.h"
 
 namespace PFSHDDManager {
 	using namespace System;
@@ -43,6 +44,7 @@ namespace PFSHDDManager {
 	//BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
+	private: System::Boolean debug = false;
 	private: System::Windows::Forms::ImageList^  PATH_VIEW_ICONS_LARGE;
 	private: System::Windows::Forms::ContextMenuStrip^  PATH_VIEW_CONTEXT;
 	private: System::Windows::Forms::ToolStripMenuItem^  exibiçãoToolStripMenuItem;
@@ -52,8 +54,8 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::ToolStripMenuItem^  listaToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  gradeToolStripMenuItem;
 	private: System::Windows::Forms::ImageList^  PATH_VIEW_ICONS_SMALL;
-	private: System::Windows::Forms::RichTextBox^  richTextBox1;
-	private: System::Windows::Forms::Button^ Debug_Button;
+
+
 
 	private: System::Windows::Forms::ListView^  PATH_VIEW;
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel2;
@@ -73,7 +75,6 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::TabControl^  tabControl1;
 	private: System::Windows::Forms::TabPage^  FileManagerTab;
 	private: System::Windows::Forms::TabPage^  PartitionManagerTab;
-	private: System::Boolean debug=false;
 
 	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel4;
 	private: System::Windows::Forms::Button^ BTN_BACK2;
@@ -88,12 +89,13 @@ namespace PFSHDDManager {
 
 	private: System::Windows::Forms::ToolStripMenuItem^ createPartitionToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ reInitializeDeviceToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ deleteToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ RemoveToolStripMenuItem;
+
 	private: System::Windows::Forms::ToolStripMenuItem^ getToolStripMenuItem;
-
-
-
-
+	private: System::Windows::Forms::ToolStripMenuItem^ newFolderToolStripMenuItem;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel6;
+	private: System::Windows::Forms::Button^ BTN_Put;
+	private: System::Windows::Forms::Button^ BTN_Get;
 	private: System::ComponentModel::IContainer^ components;
 
 	private:
@@ -120,8 +122,6 @@ namespace PFSHDDManager {
 			this->listaToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gradeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_ICONS_SMALL = (gcnew System::Windows::Forms::ImageList(this->components));
-			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
-			this->Debug_Button = (gcnew System::Windows::Forms::Button());
 			this->PATH_VIEW = (gcnew System::Windows::Forms::ListView());
 			this->tableLayoutPanel2 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->DRIVE_LTR2 = (gcnew System::Windows::Forms::ComboBox());
@@ -130,11 +130,20 @@ namespace PFSHDDManager {
 			this->BTN_BACK2 = (gcnew System::Windows::Forms::Button());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->PFS_View = (gcnew System::Windows::Forms::ListView());
+			this->PFS_ContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->createPartitionToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->newFolderToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->RemoveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->getToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->reInitializeDeviceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel3 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->DRIVE_LTR = (gcnew System::Windows::Forms::ComboBox());
 			this->BTN_GO = (gcnew System::Windows::Forms::Button());
 			this->TXTBX_PATH = (gcnew System::Windows::Forms::TextBox());
 			this->BTN_BACK = (gcnew System::Windows::Forms::Button());
+			this->tableLayoutPanel6 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->BTN_Put = (gcnew System::Windows::Forms::Button());
+			this->BTN_Get = (gcnew System::Windows::Forms::Button());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->FileManagerTab = (gcnew System::Windows::Forms::TabPage());
 			this->PartitionManagerTab = (gcnew System::Windows::Forms::TabPage());
@@ -146,22 +155,18 @@ namespace PFSHDDManager {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->TestStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->GAME_ToolStrip_Remove = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->PFS_ContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
-			this->createPartitionToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->reInitializeDeviceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->getToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
+			this->PFS_ContextMenu->SuspendLayout();
 			this->tableLayoutPanel3->SuspendLayout();
+			this->tableLayoutPanel6->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->FileManagerTab->SuspendLayout();
 			this->PartitionManagerTab->SuspendLayout();
 			this->tableLayoutPanel4->SuspendLayout();
 			this->tableLayoutPanel5->SuspendLayout();
 			this->TestStrip1->SuspendLayout();
-			this->PFS_ContextMenu->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// PATH_VIEW_ICONS_LARGE
@@ -233,25 +238,6 @@ namespace PFSHDDManager {
 			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(2, L"file.png");
 			this->PATH_VIEW_ICONS_SMALL->Images->SetKeyName(3, L"folder.png");
 			// 
-			// richTextBox1
-			// 
-			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->richTextBox1->Location = System::Drawing::Point(891, 36);
-			this->richTextBox1->Name = L"richTextBox1";
-			this->richTextBox1->Size = System::Drawing::Size(395, 503);
-			this->richTextBox1->TabIndex = 5;
-			this->richTextBox1->Text = L"";
-			// 
-			// Debug_Button
-			// 
-			this->Debug_Button->Location = System::Drawing::Point(891, 3);
-			this->Debug_Button->Name = L"Debug_Button";
-			this->Debug_Button->Size = System::Drawing::Size(70, 27);
-			this->Debug_Button->TabIndex = 4;
-			this->Debug_Button->Text = L"Debug";
-			this->Debug_Button->UseVisualStyleBackColor = true;
-			this->Debug_Button->Click += gcnew System::EventHandler(this, &MainForm::Debug_Button_Click);
-			// 
 			// PATH_VIEW
 			// 
 			this->PATH_VIEW->AllowDrop = true;
@@ -260,11 +246,14 @@ namespace PFSHDDManager {
 			this->PATH_VIEW->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
 			this->PATH_VIEW->Location = System::Drawing::Point(3, 36);
 			this->PATH_VIEW->Name = L"PATH_VIEW";
-			this->PATH_VIEW->Size = System::Drawing::Size(438, 503);
+			this->PATH_VIEW->ShowItemToolTips = true;
+			this->PATH_VIEW->Size = System::Drawing::Size(456, 490);
 			this->PATH_VIEW->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
 			this->PATH_VIEW->TabIndex = 2;
 			this->PATH_VIEW->UseCompatibleStateImageBehavior = false;
-			this->PATH_VIEW->DoubleClick += gcnew System::EventHandler(this, &MainForm::PATH_VIEW_DoubleClick);
+			this->PATH_VIEW->ItemDrag += gcnew System::Windows::Forms::ItemDragEventHandler(this, &MainForm::PATH_VIEW_ItemDrag);
+			this->PATH_VIEW->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::PATH_VIEW_KeyPress);
+			this->PATH_VIEW->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PATH_VIEW_MouseDoubleClick);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -277,17 +266,19 @@ namespace PFSHDDManager {
 				55)));
 			this->tableLayoutPanel2->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
 				55)));
+			this->tableLayoutPanel2->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				20)));
 			this->tableLayoutPanel2->Controls->Add(this->DRIVE_LTR2, 0, 0);
 			this->tableLayoutPanel2->Controls->Add(this->BTN_GO2, 2, 0);
 			this->tableLayoutPanel2->Controls->Add(this->TXTBX_PATH2, 1, 0);
 			this->tableLayoutPanel2->Controls->Add(this->BTN_BACK2, 3, 0);
 			this->tableLayoutPanel2->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->tableLayoutPanel2->Location = System::Drawing::Point(447, 3);
+			this->tableLayoutPanel2->Location = System::Drawing::Point(535, 3);
 			this->tableLayoutPanel2->Name = L"tableLayoutPanel2";
 			this->tableLayoutPanel2->RowCount = 1;
 			this->tableLayoutPanel2->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
 			this->tableLayoutPanel2->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
-			this->tableLayoutPanel2->Size = System::Drawing::Size(438, 27);
+			this->tableLayoutPanel2->Size = System::Drawing::Size(456, 27);
 			this->tableLayoutPanel2->TabIndex = 4;
 			// 
 			// DRIVE_LTR2
@@ -305,7 +296,7 @@ namespace PFSHDDManager {
 			// BTN_GO2
 			// 
 			this->BTN_GO2->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_GO2->Location = System::Drawing::Point(331, 3);
+			this->BTN_GO2->Location = System::Drawing::Point(349, 3);
 			this->BTN_GO2->Name = L"BTN_GO2";
 			this->BTN_GO2->Size = System::Drawing::Size(49, 20);
 			this->BTN_GO2->TabIndex = 1;
@@ -318,13 +309,13 @@ namespace PFSHDDManager {
 			this->TXTBX_PATH2->Dock = System::Windows::Forms::DockStyle::Top;
 			this->TXTBX_PATH2->Location = System::Drawing::Point(58, 3);
 			this->TXTBX_PATH2->Name = L"TXTBX_PATH2";
-			this->TXTBX_PATH2->Size = System::Drawing::Size(267, 20);
+			this->TXTBX_PATH2->Size = System::Drawing::Size(285, 20);
 			this->TXTBX_PATH2->TabIndex = 0;
 			// 
 			// BTN_BACK2
 			// 
 			this->BTN_BACK2->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_BACK2->Location = System::Drawing::Point(386, 3);
+			this->BTN_BACK2->Location = System::Drawing::Point(404, 3);
 			this->BTN_BACK2->Name = L"BTN_BACK2";
 			this->BTN_BACK2->Size = System::Drawing::Size(49, 20);
 			this->BTN_BACK2->TabIndex = 1;
@@ -340,24 +331,22 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel1->ColumnCount = 3;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
 				50)));
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
+				70)));
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
 				50)));
-			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				401)));
-			this->tableLayoutPanel1->Controls->Add(this->PFS_View, 0, 1);
+			this->tableLayoutPanel1->Controls->Add(this->PFS_View, 2, 1);
 			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel3, 0, 0);
-			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel2, 0, 0);
+			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel2, 2, 0);
 			this->tableLayoutPanel1->Controls->Add(this->PATH_VIEW, 0, 1);
-			this->tableLayoutPanel1->Controls->Add(this->Debug_Button, 2, 0);
-			this->tableLayoutPanel1->Controls->Add(this->richTextBox1, 2, 1);
+			this->tableLayoutPanel1->Controls->Add(this->tableLayoutPanel6, 1, 1);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tableLayoutPanel1->Location = System::Drawing::Point(3, 3);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 2;
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 33)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 100)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(1289, 542);
+			this->tableLayoutPanel1->Size = System::Drawing::Size(994, 529);
 			this->tableLayoutPanel1->TabIndex = 3;
 			this->tableLayoutPanel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::tableLayoutPanel1_Paint);
 			// 
@@ -367,9 +356,9 @@ namespace PFSHDDManager {
 			this->PFS_View->ContextMenuStrip = this->PFS_ContextMenu;
 			this->PFS_View->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->PFS_View->LargeImageList = this->PATH_VIEW_ICONS_LARGE;
-			this->PFS_View->Location = System::Drawing::Point(447, 36);
+			this->PFS_View->Location = System::Drawing::Point(535, 36);
 			this->PFS_View->Name = L"PFS_View";
-			this->PFS_View->Size = System::Drawing::Size(438, 503);
+			this->PFS_View->Size = System::Drawing::Size(456, 490);
 			this->PFS_View->SmallImageList = this->PATH_VIEW_ICONS_SMALL;
 			this->PFS_View->TabIndex = 7;
 			this->PFS_View->UseCompatibleStateImageBehavior = false;
@@ -377,6 +366,51 @@ namespace PFSHDDManager {
 			this->PFS_View->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseClick);
 			this->PFS_View->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseDoubleClick);
 			this->PFS_View->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::PFS_View_MouseDown);
+			// 
+			// PFS_ContextMenu
+			// 
+			this->PFS_ContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+				this->createPartitionToolStripMenuItem,
+					this->newFolderToolStripMenuItem, this->RemoveToolStripMenuItem, this->getToolStripMenuItem, this->reInitializeDeviceToolStripMenuItem
+			});
+			this->PFS_ContextMenu->Name = L"PFS_MainStrip";
+			this->PFS_ContextMenu->Size = System::Drawing::Size(174, 114);
+			this->PFS_ContextMenu->Opening += gcnew System::ComponentModel::CancelEventHandler(this, &MainForm::PFS_ContextMenu_Opening);
+			// 
+			// createPartitionToolStripMenuItem
+			// 
+			this->createPartitionToolStripMenuItem->Name = L"createPartitionToolStripMenuItem";
+			this->createPartitionToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->createPartitionToolStripMenuItem->Text = L"Create Partition";
+			this->createPartitionToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::CreatePartitionToolStripMenuItem_Click);
+			// 
+			// newFolderToolStripMenuItem
+			// 
+			this->newFolderToolStripMenuItem->Name = L"newFolderToolStripMenuItem";
+			this->newFolderToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->newFolderToolStripMenuItem->Text = L"New Folder";
+			this->newFolderToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::NewFolderToolStripMenuItem_Click);
+			// 
+			// RemoveToolStripMenuItem
+			// 
+			this->RemoveToolStripMenuItem->Name = L"RemoveToolStripMenuItem";
+			this->RemoveToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->RemoveToolStripMenuItem->Text = L"Remove";
+			this->RemoveToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::RemoveToolStripMenuItem_Click);
+			// 
+			// getToolStripMenuItem
+			// 
+			this->getToolStripMenuItem->Name = L"getToolStripMenuItem";
+			this->getToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->getToolStripMenuItem->Text = L"Get";
+			// 
+			// reInitializeDeviceToolStripMenuItem
+			// 
+			this->reInitializeDeviceToolStripMenuItem->AutoToolTip = true;
+			this->reInitializeDeviceToolStripMenuItem->Name = L"reInitializeDeviceToolStripMenuItem";
+			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->reInitializeDeviceToolStripMenuItem->Text = L"Re-Initialize Device";
+			this->reInitializeDeviceToolStripMenuItem->ToolTipText = L"Destroys all the Data on It";
 			// 
 			// tableLayoutPanel3
 			// 
@@ -399,7 +433,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel3->RowCount = 1;
 			this->tableLayoutPanel3->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
 			this->tableLayoutPanel3->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
-			this->tableLayoutPanel3->Size = System::Drawing::Size(438, 27);
+			this->tableLayoutPanel3->Size = System::Drawing::Size(456, 27);
 			this->tableLayoutPanel3->TabIndex = 6;
 			// 
 			// DRIVE_LTR
@@ -417,7 +451,7 @@ namespace PFSHDDManager {
 			// BTN_GO
 			// 
 			this->BTN_GO->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_GO->Location = System::Drawing::Point(331, 3);
+			this->BTN_GO->Location = System::Drawing::Point(349, 3);
 			this->BTN_GO->Name = L"BTN_GO";
 			this->BTN_GO->Size = System::Drawing::Size(49, 20);
 			this->BTN_GO->TabIndex = 1;
@@ -430,20 +464,66 @@ namespace PFSHDDManager {
 			this->TXTBX_PATH->Dock = System::Windows::Forms::DockStyle::Top;
 			this->TXTBX_PATH->Location = System::Drawing::Point(58, 3);
 			this->TXTBX_PATH->Name = L"TXTBX_PATH";
-			this->TXTBX_PATH->Size = System::Drawing::Size(267, 20);
+			this->TXTBX_PATH->Size = System::Drawing::Size(285, 20);
 			this->TXTBX_PATH->TabIndex = 0;
 			this->TXTBX_PATH->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::TXTBX_PATH_KeyPress);
 			// 
 			// BTN_BACK
 			// 
 			this->BTN_BACK->Dock = System::Windows::Forms::DockStyle::Top;
-			this->BTN_BACK->Location = System::Drawing::Point(386, 3);
+			this->BTN_BACK->Location = System::Drawing::Point(404, 3);
 			this->BTN_BACK->Name = L"BTN_BACK";
 			this->BTN_BACK->Size = System::Drawing::Size(49, 20);
 			this->BTN_BACK->TabIndex = 1;
 			this->BTN_BACK->Text = L"BACK";
 			this->BTN_BACK->UseVisualStyleBackColor = true;
 			this->BTN_BACK->Click += gcnew System::EventHandler(this, &MainForm::BTN_BACK_Click);
+			// 
+			// tableLayoutPanel6
+			// 
+			this->tableLayoutPanel6->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->tableLayoutPanel6->ColumnCount = 1;
+			this->tableLayoutPanel6->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				100)));
+			this->tableLayoutPanel6->Controls->Add(this->BTN_Put, 0, 1);
+			this->tableLayoutPanel6->Controls->Add(this->BTN_Get, 0, 2);
+			this->tableLayoutPanel6->Location = System::Drawing::Point(465, 36);
+			this->tableLayoutPanel6->Name = L"tableLayoutPanel6";
+			this->tableLayoutPanel6->RowCount = 4;
+			this->tableLayoutPanel6->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel6->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 30)));
+			this->tableLayoutPanel6->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 30)));
+			this->tableLayoutPanel6->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel6->Size = System::Drawing::Size(64, 490);
+			this->tableLayoutPanel6->TabIndex = 8;
+			// 
+			// BTN_Put
+			// 
+			this->BTN_Put->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->BTN_Put->Location = System::Drawing::Point(3, 218);
+			this->BTN_Put->Name = L"BTN_Put";
+			this->BTN_Put->Size = System::Drawing::Size(58, 24);
+			this->BTN_Put->TabIndex = 0;
+			this->BTN_Put->Text = L">>";
+			this->BTN_Put->UseVisualStyleBackColor = true;
+			this->BTN_Put->Click += gcnew System::EventHandler(this, &MainForm::BTN_Put_Click);
+			// 
+			// BTN_Get
+			// 
+			this->BTN_Get->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->BTN_Get->Location = System::Drawing::Point(3, 248);
+			this->BTN_Get->Name = L"BTN_Get";
+			this->BTN_Get->Size = System::Drawing::Size(58, 24);
+			this->BTN_Get->TabIndex = 0;
+			this->BTN_Get->Text = L"<<";
+			this->BTN_Get->UseVisualStyleBackColor = true;
+			this->BTN_Get->Click += gcnew System::EventHandler(this, &MainForm::BTN_Get_Click);
 			// 
 			// tabControl1
 			// 
@@ -453,7 +533,7 @@ namespace PFSHDDManager {
 			this->tabControl1->Location = System::Drawing::Point(0, 0);
 			this->tabControl1->Name = L"tabControl1";
 			this->tabControl1->SelectedIndex = 0;
-			this->tabControl1->Size = System::Drawing::Size(1303, 574);
+			this->tabControl1->Size = System::Drawing::Size(1008, 561);
 			this->tabControl1->TabIndex = 4;
 			// 
 			// FileManagerTab
@@ -462,7 +542,7 @@ namespace PFSHDDManager {
 			this->FileManagerTab->Location = System::Drawing::Point(4, 22);
 			this->FileManagerTab->Name = L"FileManagerTab";
 			this->FileManagerTab->Padding = System::Windows::Forms::Padding(3);
-			this->FileManagerTab->Size = System::Drawing::Size(1295, 548);
+			this->FileManagerTab->Size = System::Drawing::Size(1000, 535);
 			this->FileManagerTab->TabIndex = 0;
 			this->FileManagerTab->Text = L"File Manager";
 			this->FileManagerTab->UseVisualStyleBackColor = true;
@@ -471,11 +551,11 @@ namespace PFSHDDManager {
 			// 
 			this->PartitionManagerTab->Controls->Add(this->tableLayoutPanel4);
 			this->PartitionManagerTab->Location = System::Drawing::Point(4, 22);
-			this->PartitionManagerTab->Name = L"PartitionManagerTab";
+			this->PartitionManagerTab->Name = L"InConstructionTab";
 			this->PartitionManagerTab->Padding = System::Windows::Forms::Padding(3);
-			this->PartitionManagerTab->Size = System::Drawing::Size(1295, 548);
+			this->PartitionManagerTab->Size = System::Drawing::Size(1000, 535);
 			this->PartitionManagerTab->TabIndex = 1;
-			this->PartitionManagerTab->Text = L"Partition Manager";
+			this->PartitionManagerTab->Text = L"In Construction";
 			this->PartitionManagerTab->UseVisualStyleBackColor = true;
 			// 
 			// tableLayoutPanel4
@@ -492,7 +572,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel4->RowCount = 2;
 			this->tableLayoutPanel4->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 33)));
 			this->tableLayoutPanel4->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-			this->tableLayoutPanel4->Size = System::Drawing::Size(1289, 542);
+			this->tableLayoutPanel4->Size = System::Drawing::Size(994, 529);
 			this->tableLayoutPanel4->TabIndex = 0;
 			// 
 			// tableLayoutPanel5
@@ -515,7 +595,7 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel5->Name = L"tableLayoutPanel5";
 			this->tableLayoutPanel5->RowCount = 1;
 			this->tableLayoutPanel5->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-			this->tableLayoutPanel5->Size = System::Drawing::Size(1283, 27);
+			this->tableLayoutPanel5->Size = System::Drawing::Size(988, 27);
 			this->tableLayoutPanel5->TabIndex = 0;
 			// 
 			// label1
@@ -534,12 +614,12 @@ namespace PFSHDDManager {
 			this->comboBox1->FormattingEnabled = true;
 			this->comboBox1->Location = System::Drawing::Point(58, 3);
 			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(1112, 21);
+			this->comboBox1->Size = System::Drawing::Size(817, 21);
 			this->comboBox1->TabIndex = 1;
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(1176, 3);
+			this->button2->Location = System::Drawing::Point(881, 3);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(49, 21);
 			this->button2->TabIndex = 2;
@@ -548,7 +628,7 @@ namespace PFSHDDManager {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(1231, 3);
+			this->button3->Location = System::Drawing::Point(936, 3);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(49, 21);
 			this->button3->TabIndex = 3;
@@ -568,45 +648,11 @@ namespace PFSHDDManager {
 			this->GAME_ToolStrip_Remove->Text = L"Remove";
 			this->GAME_ToolStrip_Remove->Click += gcnew System::EventHandler(this, &MainForm::GAME_ToolStrip_Remove_Click);
 			// 
-			// PFS_ContextMenu
-			// 
-			this->PFS_ContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
-				this->createPartitionToolStripMenuItem,
-					this->reInitializeDeviceToolStripMenuItem, this->deleteToolStripMenuItem, this->getToolStripMenuItem
-			});
-			this->PFS_ContextMenu->Name = L"PFS_MainStrip";
-			this->PFS_ContextMenu->Size = System::Drawing::Size(181, 114);
-			this->PFS_ContextMenu->Opening += gcnew System::ComponentModel::CancelEventHandler(this, &MainForm::PFS_ContextMenu_Opening);
-			// 
-			// createPartitionToolStripMenuItem
-			// 
-			this->createPartitionToolStripMenuItem->Name = L"createPartitionToolStripMenuItem";
-			this->createPartitionToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-			this->createPartitionToolStripMenuItem->Text = L"Create Partition";
-			// 
-			// reInitializeDeviceToolStripMenuItem
-			// 
-			this->reInitializeDeviceToolStripMenuItem->Name = L"reInitializeDeviceToolStripMenuItem";
-			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-			this->reInitializeDeviceToolStripMenuItem->Text = L"Re-Initialize Device";
-			// 
-			// deleteToolStripMenuItem
-			// 
-			this->deleteToolStripMenuItem->Name = L"deleteToolStripMenuItem";
-			this->deleteToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-			this->deleteToolStripMenuItem->Text = L"Delete";
-			// 
-			// getToolStripMenuItem
-			// 
-			this->getToolStripMenuItem->Name = L"getToolStripMenuItem";
-			this->getToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-			this->getToolStripMenuItem->Text = L"Get";
-			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1303, 574);
+			this->ClientSize = System::Drawing::Size(1008, 561);
 			this->Controls->Add(this->tabControl1);
 			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"MainForm";
@@ -617,8 +663,10 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel2->ResumeLayout(false);
 			this->tableLayoutPanel2->PerformLayout();
 			this->tableLayoutPanel1->ResumeLayout(false);
+			this->PFS_ContextMenu->ResumeLayout(false);
 			this->tableLayoutPanel3->ResumeLayout(false);
 			this->tableLayoutPanel3->PerformLayout();
+			this->tableLayoutPanel6->ResumeLayout(false);
 			this->tabControl1->ResumeLayout(false);
 			this->FileManagerTab->ResumeLayout(false);
 			this->FileManagerTab->PerformLayout();
@@ -627,7 +675,6 @@ namespace PFSHDDManager {
 			this->tableLayoutPanel5->ResumeLayout(false);
 			this->tableLayoutPanel5->PerformLayout();
 			this->TestStrip1->ResumeLayout(false);
-			this->PFS_ContextMenu->ResumeLayout(false);
 			this->ResumeLayout(false);
 
 		}
@@ -636,7 +683,6 @@ namespace PFSHDDManager {
 
 	private: System::Void ViewPath(System::String^ path);
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void PATH_VIEW_DoubleClick(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void íconesGrandesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void íconesPequenosToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void detalhesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
@@ -663,5 +709,14 @@ private: System::Void PFS_View_MouseDown(System::Object^ sender, System::Windows
 private: System::Void PFS_View_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 private: System::Void PFS_View_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 private: System::Void PFS_ContextMenu_Opening(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e);
+private: System::Void PATH_VIEW_ItemDrag(System::Object^ sender, System::Windows::Forms::ItemDragEventArgs^ e) {
+}
+private: System::Void PATH_VIEW_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
+private: System::Void BTN_Put_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void BTN_Get_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void RemoveToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void CreatePartitionToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void NewFolderToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void PATH_VIEW_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 };
 }

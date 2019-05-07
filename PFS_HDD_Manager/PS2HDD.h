@@ -100,7 +100,7 @@ public:
 	System::Void InitDev(Device^ Dev);
 
 
-	System::Void MkPart(String^ Dev, String^ PartName, int Size);
+	System::Void MkPart(File^ Parent, String^ PartName, System::Int32 Size);
 	
 	//void PfsShell_OutputDataReceived(System::Object^ sender, System::Diagnostics::DataReceivedEventArgs^ e);
 
@@ -110,7 +110,7 @@ public:
 
 	//OK
 	//Delete a specified partition of the specified device
-	System::Boolean HDLDeletePart(Device^ dev, Partition^ Part);
+	System::Boolean HDL_Remove(File^ Part);
 
 	//OK
 	//Initialize the HDD into PFS system using PFSShell
@@ -118,7 +118,11 @@ public:
 
 	//OK
 	//Make a Partition with the given Name and Size(MB)
-	System::Boolean PFS_Mkpart(Device^ dev, String^ Name, Int16 Size);
+	File^ PFS_Mkpart(Device^ dev, String^ Name, Int32 Size);
+
+
+	System::Void PFS_Mkfs(File^);
+
 
 	//Will not be used on this way
 	System::Boolean PFS_LCD(String^ Path) { return 0; };
@@ -131,11 +135,11 @@ public:
 
 	//OK
 	//makes a directory in the given device and partition, with the given name
-	System::Void PFS_MkDir(Device^ Dev, String^ Part, String^ Name);
+	System::Void PFS_MkDir(File^ , String^ );
 	
 	//OK
 	//Removes the given directory in the given device partition
-	System::Void PFS_RmDir(Device^ Dev, String^ Part, String^ Name);
+	System::Void PFS_RmDir(File^);
 
 	//OK
 	//copy the fine in the given path from ps2 hdd to the givem system path
@@ -147,7 +151,7 @@ public:
 
 	//OK
 	//Write the given file to the given path, partition and device
-	System::Void PFS_Put(String^ Orig, String^ Name, Device^ Dev, String^ Part, String^ Dest);
+	System::Void PFS_Put(String^ Orig, String^ Name, File^ Dest);
 
 	//OK
 	//Write the given file to the given path, partition and device
@@ -160,6 +164,9 @@ public:
 	//OK
 	//Removes the given file from the given path, partition and device
 	System::Void PFS_Rename(Device^ Dev, String^ Part, String^ Dest, String^ OldName, String^ NewName);
+
+	//Remove the given path - removes child files if exists
+	System::Void Remove(File^);
 };
 
 //research:
