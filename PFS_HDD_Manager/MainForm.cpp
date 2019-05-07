@@ -238,8 +238,6 @@ System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 				}
 			}
 
-			try { HDD->Query_File_Path(PFSHistory->Peek()); }
-			catch (String^ Error) {}
 			for each (File ^ file in PFSHistory->Peek()->Childs)
 			{
 				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
@@ -249,6 +247,8 @@ System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 		case File::Types::File:
 			break;
 		case File::Types::Folder:
+			HDD->Query_File_Path(PFSHistory->Peek());
+
 			for each (File ^ file in PFSHistory->Peek()->Childs)
 			{
 				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);

@@ -1,3 +1,20 @@
+V0.19.15.7{
+	ADDED:
+
+	CHANGED:
+
+	FIXED:
+		Bug where new folder would always be ceated in to the partition root
+
+	REMOVED:
+
+	TODO:
+		Implement Go button
+		Implement re-initialize code
+		Implement toolstip Get Button
+		Reimplement File explorer
+		Identify game ISO`s with the game icon
+
 V0.19.15.6{
 	ADDED:
 		Toolstrip Menu in PFSView

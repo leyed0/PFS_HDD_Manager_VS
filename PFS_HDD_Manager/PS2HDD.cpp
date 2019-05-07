@@ -245,6 +245,7 @@ System::Void PS2HDD::PFS_MkDir(File^ parent, String^ name)
 	PFSShell->Start();
 	PFSShell->StandardInput->WriteLine("device " + parent->Root->Name);
 	PFSShell->StandardInput->WriteLine("mount \"" + parent->PartRoot->Name+"\"");
+	if(parent->Type == File::Types::Folder)PFSShell->StandardInput->WriteLine("cd \"" + parent->Path->Substring(parent->Path->IndexOf("/")) + "\"");
 	PFSShell->StandardInput->WriteLine("mkdir \"" + name + "\"");
 	PFSShell->StandardInput->WriteLine("exit");
 	PFSShell->WaitForExit();
