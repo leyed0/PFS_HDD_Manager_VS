@@ -96,6 +96,7 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel6;
 	private: System::Windows::Forms::Button^ BTN_Put;
 	private: System::Windows::Forms::Button^ BTN_Get;
+	private: System::Windows::Forms::ToolStripMenuItem^ renameToolStripMenuItem;
 	private: System::ComponentModel::IContainer^ components;
 
 	private:
@@ -155,6 +156,7 @@ namespace PFSHDDManager {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->TestStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->GAME_ToolStrip_Remove = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->renameToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->PATH_VIEW_CONTEXT->SuspendLayout();
 			this->tableLayoutPanel2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
@@ -369,46 +371,46 @@ namespace PFSHDDManager {
 			// 
 			// PFS_ContextMenu
 			// 
-			this->PFS_ContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+			this->PFS_ContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
 				this->createPartitionToolStripMenuItem,
-					this->newFolderToolStripMenuItem, this->RemoveToolStripMenuItem, this->getToolStripMenuItem, this->reInitializeDeviceToolStripMenuItem
+					this->newFolderToolStripMenuItem, this->RemoveToolStripMenuItem, this->renameToolStripMenuItem, this->getToolStripMenuItem, this->reInitializeDeviceToolStripMenuItem
 			});
 			this->PFS_ContextMenu->Name = L"PFS_MainStrip";
-			this->PFS_ContextMenu->Size = System::Drawing::Size(174, 114);
+			this->PFS_ContextMenu->Size = System::Drawing::Size(181, 158);
 			this->PFS_ContextMenu->Opening += gcnew System::ComponentModel::CancelEventHandler(this, &MainForm::PFS_ContextMenu_Opening);
 			// 
 			// createPartitionToolStripMenuItem
 			// 
 			this->createPartitionToolStripMenuItem->Name = L"createPartitionToolStripMenuItem";
-			this->createPartitionToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->createPartitionToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->createPartitionToolStripMenuItem->Text = L"Create Partition";
 			this->createPartitionToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::CreatePartitionToolStripMenuItem_Click);
 			// 
 			// newFolderToolStripMenuItem
 			// 
 			this->newFolderToolStripMenuItem->Name = L"newFolderToolStripMenuItem";
-			this->newFolderToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->newFolderToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->newFolderToolStripMenuItem->Text = L"New Folder";
 			this->newFolderToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::NewFolderToolStripMenuItem_Click);
 			// 
 			// RemoveToolStripMenuItem
 			// 
 			this->RemoveToolStripMenuItem->Name = L"RemoveToolStripMenuItem";
-			this->RemoveToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->RemoveToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->RemoveToolStripMenuItem->Text = L"Remove";
 			this->RemoveToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::RemoveToolStripMenuItem_Click);
 			// 
 			// getToolStripMenuItem
 			// 
 			this->getToolStripMenuItem->Name = L"getToolStripMenuItem";
-			this->getToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->getToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->getToolStripMenuItem->Text = L"Get";
 			// 
 			// reInitializeDeviceToolStripMenuItem
 			// 
 			this->reInitializeDeviceToolStripMenuItem->AutoToolTip = true;
 			this->reInitializeDeviceToolStripMenuItem->Name = L"reInitializeDeviceToolStripMenuItem";
-			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->reInitializeDeviceToolStripMenuItem->Text = L"Re-Initialize Device";
 			this->reInitializeDeviceToolStripMenuItem->ToolTipText = L"Destroys all the Data on It";
 			// 
@@ -551,7 +553,7 @@ namespace PFSHDDManager {
 			// 
 			this->PartitionManagerTab->Controls->Add(this->tableLayoutPanel4);
 			this->PartitionManagerTab->Location = System::Drawing::Point(4, 22);
-			this->PartitionManagerTab->Name = L"InConstructionTab";
+			this->PartitionManagerTab->Name = L"PartitionManagerTab";
 			this->PartitionManagerTab->Padding = System::Windows::Forms::Padding(3);
 			this->PartitionManagerTab->Size = System::Drawing::Size(1000, 535);
 			this->PartitionManagerTab->TabIndex = 1;
@@ -647,6 +649,12 @@ namespace PFSHDDManager {
 			this->GAME_ToolStrip_Remove->Size = System::Drawing::Size(117, 22);
 			this->GAME_ToolStrip_Remove->Text = L"Remove";
 			this->GAME_ToolStrip_Remove->Click += gcnew System::EventHandler(this, &MainForm::GAME_ToolStrip_Remove_Click);
+			// 
+			// renameToolStripMenuItem
+			// 
+			this->renameToolStripMenuItem->Name = L"renameToolStripMenuItem";
+			this->renameToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->renameToolStripMenuItem->Text = L"Rename";
 			// 
 			// MainForm
 			// 

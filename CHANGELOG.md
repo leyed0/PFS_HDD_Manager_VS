@@ -1,3 +1,20 @@
+V0.21.15.7{
+	ADDED:
+		Rename Option in PFSView Context Menu
+		ScreenShot added
+	CHANGED:
+
+	FIXED:
+
+	REMOVED:
+
+	TODO:
+		Implement Go button
+		Implement re-initialize code
+		Implement toolstip Get Button
+		Reimplement File explorer
+		Identify game ISO`s with the game icon
+
 V0.19.15.7{
 	ADDED:
 

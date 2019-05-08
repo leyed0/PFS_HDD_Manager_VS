@@ -3,7 +3,9 @@
 
 # PFS_HDD_Manager
 
-"PHM" is a tool meant to handle all the needs of a PS2 user who uses internal Hard Drives. Using HDL_Dump and PFSShell combined with a GUI the user can handle PS2 Hard Drives, managing Partitions, files and VMC`s
+"PHM" is a single tool to handle all the needs of a PS2 internal Hard Drive user. It uses HDL_Dump and PFSShell Functions integrated in a sigle GUI meant to handle PS2 Hard Drives, managing Partitions, files and VMC`s
+It is a ongoing project and still have lots of things to be implemented.
+For now you can handle your PS2 HDD, Editing its partitions and folders... Some coding was made wrong and the function to transfer files from your PC to the HDD is not working properly, But soon it will
 
 ## Getting Started
 

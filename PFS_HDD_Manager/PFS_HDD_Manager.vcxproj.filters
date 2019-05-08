@@ -86,6 +86,9 @@
     <Image Include="ICONS\folder.png">
       <Filter>Arquivos de Recurso</Filter>
     </Image>
+    <Image Include="ScreenShot.png">
+      <Filter>Arquivos de Recurso</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

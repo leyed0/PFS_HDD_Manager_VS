@@ -208,6 +208,7 @@
   <ItemGroup>
     <Image Include="ICONS\file.png" />
     <Image Include="ICONS\folder.png" />
+    <Image Include="ScreenShot.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="InputBox.resx">
