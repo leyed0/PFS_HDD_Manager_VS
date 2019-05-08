@@ -39,9 +39,9 @@ namespace PFSHDDManager {
 	private: System::Diagnostics::Process^ PFSShell;
 	private: System::Diagnostics::Process^ HDLDump;
 	private: PS2HDD^ HDD;
-	private: System::Collections::Generic::Stack <System::String^>^ Path1History;
+	private: System::Collections::Generic::Stack <System::String^>^ PATH_VIEWHistory;
+	private: System::Collections::Generic::Stack <IO::Path^>^ PATH_ViewHistory;
 	private: System::Collections::Generic::Stack <File^>^ PFSHistory;
-	//BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
 	private: System::Boolean debug = false;
@@ -708,6 +708,7 @@ namespace PFSHDDManager {
 	private: System::Void BTN_GO2_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void ListPS2HDD();
 	private: System::Void DRIVE_LTR2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+			 System::Void ViewSystemPath();
 			 System::Void ViewPFSPath();
 	private: System::Void GAME_ToolStrip_Remove_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void BTN_BACK2_Click(System::Object^ sender, System::EventArgs^ e);

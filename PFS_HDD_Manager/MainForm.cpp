@@ -24,7 +24,7 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 	Path = path;
 	TXTBX_PATH->Text = Path;
 	PATH_VIEW->Clear();
-	Path1History->Push(Path);
+	PATH_VIEWHistory->Push(Path);
 	try {
 		array<String^>^ dir = IO::Directory::GetDirectories(Path);
 		array<String^>^ file = IO::Directory::GetFiles(Path);
@@ -33,10 +33,12 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 		}
 		for (int i = 0; i < file->Length; i++) {
 			PATH_VIEW->Items->Add(file[i]->Substring(file[i]->LastIndexOf("\\") + 1), IMAGELIST->Images->Count - 2);
+			path->Replace("\\", "/");
 		}
 	}
 	catch (System::IO::IOException^ err)
 	{
+		MessageBox::Show(err->Message);
 		return ;
 	}
 	return System::Void();
@@ -45,7 +47,7 @@ System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, System::EventArgs ^ e)
 {
 	PFSHistory = gcnew System::Collections::Generic::Stack <File^>;
-	Path1History = gcnew System::Collections::Generic::Stack <System::String^>;
+	PATH_VIEWHistory = gcnew System::Collections::Generic::Stack <System::String^>;
 	DRIVE_LTR->Items->AddRange(System::IO::Directory::GetLogicalDrives());
 	Path = System::IO::Directory::GetLogicalDrives()[0];
 	ViewPath(Path);
@@ -87,7 +89,7 @@ System::Void PFSHDDManager::MainForm::gradeToolStripMenuItem_Click(System::Objec
 System::Void PFSHDDManager::MainForm::BTN_GO_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	Path = TXTBX_PATH->Text;
-	if (Path == Path1History->Peek()) Path1History->Pop();
+	if (Path == PATH_VIEWHistory->Peek()) PATH_VIEWHistory->Pop();
 	ViewPath(Path);
 	return System::Void();
 }
@@ -99,9 +101,9 @@ System::Void PFSHDDManager::MainForm::TXTBX_PATH_KeyPress(System::Object^  sende
 System::Void PFSHDDManager::MainForm::BTN_BACK_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	try {
-		if (Path1History->Count <= 1) return;
-		if (Path1History->Peek() == Path) Path1History->Pop();
-		ViewPath(Path1History->Pop());
+		if (PATH_VIEWHistory->Count <= 1) return;
+		if (PATH_VIEWHistory->Peek() == Path) PATH_VIEWHistory->Pop();
+		ViewPath(PATH_VIEWHistory->Pop());
 		return System::Void();
 	}
 	catch (System::Exception ^error) {
@@ -200,6 +202,11 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Ob
 	}
 	PFSHistory->Push(CurrDev->DevFile);
 	ViewPFSPath();
+}
+
+System::Void PFSHDDManager::MainForm::ViewSystemPath()
+{
+	return System::Void();
 }
 
 
@@ -365,7 +372,7 @@ System::Void PFSHDDManager::MainForm::BTN_Put_Click(System::Object^ sender, Syst
 	if (PATH_VIEW->SelectedItems->Count > 0 && PFSHistory->Count>0 &&(PFSHistory->Peek()->Type == File::Types::Folder|| PFSHistory->Peek()->Type == File::Types::Partition))
 		for each (ListViewItem ^ item in PATH_VIEW->SelectedItems)
 		{
-			HDD->PFS_Put(Path1History->Peek(), item->Text, PFSHistory->Peek());
+			HDD->PFS_Put(PATH_VIEWHistory->Peek(), item->Text, PFSHistory->Peek());
 		}
 }
 System::Void PFSHDDManager::MainForm::BTN_Get_Click(System::Object^ sender, System::EventArgs^ e)
@@ -410,6 +417,7 @@ System::Void PFSHDDManager::MainForm::PATH_VIEW_MouseDoubleClick(System::Object^
 {
 	if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
 	Path = Path + "\\" + PATH_VIEW->SelectedItems[0]->Text;
+
 	ViewPath(Path);
 	return System::Void();
 }
