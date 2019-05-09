@@ -251,16 +251,26 @@ System::Void PS2HDD::PFS_MkDir(File^ parent, String^ name)
 	PFSShell->WaitForExit();
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
+	File^ tmp = gcnew File(name, File::Types::Folder, parent);
+	tmp->Root = parent->Root;
+	tmp->PartRoot = parent->PartRoot;
+	tmp->Path = parent->Path + "/" + tmp->Name;
+	if (parent->Childs == nullptr) parent->Childs = gcnew System::Collections::Generic::List<File^>;
+	parent->Childs->Add(tmp);
 	if (output->Contains("error")) return;
 	return;
 }
 
 System::Void  PS2HDD::PFS_RmDir(File^ dir)
 {
+	/*if (dir->Childs->Count > 0) for each (File^ fl in dir->Childs)
+	{
+		Remove(fl);
+	} */
 	PFSShell->Start();
 	PFSShell->StandardInput->WriteLine("device " + dir->Root->Name);
 	PFSShell->StandardInput->WriteLine("mount " + dir->PartRoot->Name);
-	PFSShell->StandardInput->WriteLine("rmdir " + dir->Path->Substring(dir->Path->IndexOf("/")));
+	PFSShell->StandardInput->WriteLine("rmdir \"" + dir->Path->Substring(dir->Path->IndexOf("/")) + "\"");
 	PFSShell->StandardInput->WriteLine("exit");
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
@@ -304,31 +314,13 @@ System::Void  PS2HDD::PFS_Gets(Device^ Dev, String^ Part, String^ Orig, System::
 System::Void  PS2HDD::PFS_Put(String^ Orig, String^ Name, File^ Dest)
 {
 	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("lcd " + Orig);
+	PFSShell->StandardInput->WriteLine("lcd \"" + Orig+"\"");
 	PFSShell->StandardInput->WriteLine("device " + Dest->Root->Name);
 	PFSShell->StandardInput->WriteLine("mount \"" + Dest->PartRoot->Name + "\"");
-	PFSShell->StandardInput->WriteLine("cd " + Dest->Path);
-	PFSShell->StandardInput->WriteLine("put " + Name);
+	if(Dest->Type == File::Types::Folder) PFSShell->StandardInput->WriteLine("cd \"" + Dest->Path->Substring(Dest->Path->IndexOf("/")) + "\"");
+	PFSShell->StandardInput->WriteLine("put \"" + Name + "\"");
 	PFSShell->StandardInput->WriteLine("exit");
 	PFSShell->WaitForExit();
-	output = PFSShell->StandardOutput->ReadToEnd();
-	output += PFSShell->StandardError->ReadToEnd();
-	if (output->Contains("error")) return;
-	return;
-}
-
-System::Void  PS2HDD::PFS_Puts(String^ Orig, System::Collections::Generic::List<String^>^ Names, Device^ Dev, String^ Part, String^ Dest)
-{
-	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("lcd " + Orig);
-	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
-	PFSShell->StandardInput->WriteLine("mount " + Part);
-	PFSShell->StandardInput->WriteLine("cd " + Dest);
-	for each (String^ Name in Names)
-	{
-		PFSShell->StandardInput->WriteLine("put " + Name);
-	}
-	PFSShell->StandardInput->WriteLine("exit");
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
 	if (output->Contains("error")) return;
@@ -345,9 +337,9 @@ System::Void  PS2HDD::PFS_RM(File^ file)
 
 	PFSShell->Start();
 	PFSShell->StandardInput->WriteLine("device " + file->Root->Name);
-	PFSShell->StandardInput->WriteLine("mount " + file->PartRoot->Name);
-	PFSShell->StandardInput->WriteLine("cd " + tmp);
-	PFSShell->StandardInput->WriteLine("rm " + file->Name);
+	PFSShell->StandardInput->WriteLine("mount \"" + file->PartRoot->Name + "\"");
+	PFSShell->StandardInput->WriteLine("cd \"" + tmp + "\"");
+	PFSShell->StandardInput->WriteLine("rm \"" + file->Name + "\"");
 	PFSShell->StandardInput->WriteLine("exit");
 	PFSShell->WaitForExit();
 	output = PFSShell->StandardOutput->ReadToEnd();

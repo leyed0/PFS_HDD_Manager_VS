@@ -152,11 +152,6 @@ public:
 	//OK
 	//Write the given file to the given path, partition and device
 	System::Void PFS_Put(String^ Orig, String^ Name, File^ Dest);
-
-	//OK
-	//Write the given file to the given path, partition and device
-	System::Void PFS_Puts(String^ Orig, System::Collections::Generic::List <String^>^ Names, Device^ Dev, String^ Part, String^ Dest);
-
 	//OK
 	//Removes the given file from the given path, partition and device
 	System::Void PFS_RM(File^);

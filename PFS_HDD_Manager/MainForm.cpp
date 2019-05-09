@@ -15,42 +15,59 @@ int main(array<String^>^ argv) {
 	return 0;
 }
 
+System::Void PFSHDDManager::MainForm::ViewPath()
+{
+	if (!DirInfoHistory->Peek()->Exists) return;
+	Path_View->Clear();
+	System::Windows::Forms::ImageList^  IMAGELIST;
+	if (Path_View->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = Path_View->LargeImageList;
+	if (Path_View->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = Path_View->SmallImageList;
+
+	for each (IO::DirectoryInfo^ Dinfo in DirInfoHistory->Peek()->GetDirectories())
+	{
+		Path_View->Items->Add(Dinfo->Name, IMAGELIST->Images->Count - 1);
+	}
+	for each (IO::FileInfo^ Finfo in DirInfoHistory->Peek()->GetFiles())
+	{
+		if(Finfo->Extension->ToUpper() == ".ISO") Path_View->Items->Add(Finfo->Name, IMAGELIST->Images->Count - 3);
+		else Path_View->Items->Add(Finfo->Name, IMAGELIST->Images->Count - 2);
+	}
+	TXTBX_Path_View->Text = DirInfoHistory->Peek()->FullName;
+}
+
 System::Void PFSHDDManager::MainForm::ViewPath(System::String ^ path)
 {
-	System::Windows::Forms::ImageList^  IMAGELIST;
-	if (PATH_VIEW->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
-	if (PATH_VIEW->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
+	//System::Windows::Forms::ImageList^  IMAGELIST;
+	//if (PATH_VIEW->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
+	//if (PATH_VIEW->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
 
-	Path = path;
-	TXTBX_PATH->Text = Path;
-	PATH_VIEW->Clear();
-	PATH_VIEWHistory->Push(Path);
-	try {
-		array<String^>^ dir = IO::Directory::GetDirectories(Path);
-		array<String^>^ file = IO::Directory::GetFiles(Path);
-		for (int i = 0; i < dir->Length; i++) {
-			PATH_VIEW->Items->Add(dir[i]->Substring(dir[i]->LastIndexOf("\\") + 1), IMAGELIST->Images->Count - 1);
-		}
-		for (int i = 0; i < file->Length; i++) {
-			PATH_VIEW->Items->Add(file[i]->Substring(file[i]->LastIndexOf("\\") + 1), IMAGELIST->Images->Count - 2);
-			path->Replace("\\", "/");
-		}
-	}
-	catch (System::IO::IOException^ err)
-	{
-		MessageBox::Show(err->Message);
-		return ;
-	}
-	return System::Void();
+	//Path = path;
+	//TXTBX_PATH->Text = Path;
+	//PATH_VIEW->Clear();
+	//Path1History->Push(Path);
+	//try {
+	//	array<String^>^ dir = IO::Directory::GetDirectories(Path);
+	//	array<String^>^ file = IO::Directory::GetFiles(Path);
+	//	for (int i = 0; i < dir->Length; i++) {
+	//		PATH_VIEW->Items->Add(dir[i]->Substring(dir[i]->LastIndexOf("\\") + 1), IMAGELIST->Images->Count - 1);
+	//	}
+	//	for (int i = 0; i < file->Length; i++) {
+	//		PATH_VIEW->Items->Add(file[i]->Substring(file[i]->LastIndexOf("\\") + 1), IMAGELIST->Images->Count - 2);
+	//	}
+	//}
+	//catch (System::IO::IOException^ err)
+	//{
+	//	return ;
+	//}
+	//return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, System::EventArgs ^ e)
 {
 	PFSHistory = gcnew System::Collections::Generic::Stack <File^>;
-	PATH_VIEWHistory = gcnew System::Collections::Generic::Stack <System::String^>;
-	DRIVE_LTR->Items->AddRange(System::IO::Directory::GetLogicalDrives());
-	Path = System::IO::Directory::GetLogicalDrives()[0];
-	ViewPath(Path);
+	PathHistory = gcnew System::Collections::Generic::Stack <String^>;
+	DirInfoHistory = gcnew System::Collections::Generic::Stack <IO::DirectoryInfo^>;
+	DRIVE_LTR->Items->AddRange(IO::DriveInfo::GetDrives());
 	ListPS2HDD();
 
 	return System::Void();
@@ -58,38 +75,38 @@ System::Void PFSHDDManager::MainForm::MainForm_Load(System::Object ^ sender, Sys
 
 System::Void PFSHDDManager::MainForm::íconesGrandesToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	PATH_VIEW->View = System::Windows::Forms::View::LargeIcon;
+	//PATH_VIEW->View = System::Windows::Forms::View::LargeIcon;
 	return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::íconesPequenosToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	PATH_VIEW->View = System::Windows::Forms::View::SmallIcon;
+	//PATH_VIEW->View = System::Windows::Forms::View::SmallIcon;
 	return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::detalhesToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	PATH_VIEW->View = System::Windows::Forms::View::Details;
+	//PATH_VIEW->View = System::Windows::Forms::View::Details;
 	return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::listaToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	PATH_VIEW->View = System::Windows::Forms::View::List;
+	//PATH_VIEW->View = System::Windows::Forms::View::List;
 	return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::gradeToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	PATH_VIEW->View = System::Windows::Forms::View::Tile;
+	//PATH_VIEW->View = System::Windows::Forms::View::Tile;
 	return System::Void();
 }
 
 System::Void PFSHDDManager::MainForm::BTN_GO_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	Path = TXTBX_PATH->Text;
-	if (Path == PATH_VIEWHistory->Peek()) PATH_VIEWHistory->Pop();
+	Path = TXTBX_Path_View->Text;
+	if (Path == Path1History->Peek()) Path1History->Pop();
 	ViewPath(Path);
 	return System::Void();
 }
@@ -101,10 +118,8 @@ System::Void PFSHDDManager::MainForm::TXTBX_PATH_KeyPress(System::Object^  sende
 System::Void PFSHDDManager::MainForm::BTN_BACK_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	try {
-		if (PATH_VIEWHistory->Count <= 1) return;
-		if (PATH_VIEWHistory->Peek() == Path) PATH_VIEWHistory->Pop();
-		ViewPath(PATH_VIEWHistory->Pop());
-		return System::Void();
+		DirInfoHistory->Pop();
+		ViewPath();
 	}
 	catch (System::Exception ^error) {
 
@@ -113,7 +128,17 @@ System::Void PFSHDDManager::MainForm::BTN_BACK_Click(System::Object ^ sender, Sy
 
 System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
 {
-	return System::Void();
+	DirInfoHistory->Push(gcnew IO::DirectoryInfo(DRIVE_LTR->Text));
+	//MessageBox::Show(PathHistory->Peek());
+	ViewPath();
+}
+
+System::Void PFSHDDManager::MainForm::Path_View_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
+{
+	//if (Path_View->SelectedItems->Count > 0) MessageBox::Show("done");
+	String^ Test = DirInfoHistory->Peek()->FullName + Path_View->SelectedItems[0]->Text + "\\";
+	DirInfoHistory->Push(gcnew IO::DirectoryInfo(DirInfoHistory->Peek()->FullName + Path_View->SelectedItems[0]->Text + "\\"));
+	ViewPath();
 }
 
 System::Void PFSHDDManager::MainForm::Debug_Button_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -204,19 +229,14 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Ob
 	ViewPFSPath();
 }
 
-System::Void PFSHDDManager::MainForm::ViewSystemPath()
-{
-	return System::Void();
-}
-
 
 
 System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 	HDD->Query();
 	PFS_View->Clear();
 	System::Windows::Forms::ImageList^ IMAGELIST;
-	if (PFS_View->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = PATH_VIEW->LargeImageList;
-	if (PFS_View->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = PATH_VIEW->SmallImageList;
+	if (PFS_View->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = ICONS_LARGE;
+	if (PFS_View->View == System::Windows::Forms::View::SmallIcon)  IMAGELIST = ICONS_SMALL;
 
 	//CurrDev = HDD->GetDevName(DRIVE_LTR2->Text);
 	//CurrDev = HDD->GetDevName(PFSHistory->Peek()->Root->Name);
@@ -245,6 +265,8 @@ System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 				}
 			}
 
+			try { HDD->Query_File_Path(PFSHistory->Peek()); }
+			catch (String^ Error) {}
 			for each (File ^ file in PFSHistory->Peek()->Childs)
 			{
 				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
@@ -254,8 +276,6 @@ System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 		case File::Types::File:
 			break;
 		case File::Types::Folder:
-			HDD->Query_File_Path(PFSHistory->Peek());
-
 			for each (File ^ file in PFSHistory->Peek()->Childs)
 			{
 				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
@@ -331,8 +351,8 @@ System::Void PFSHDDManager::MainForm::PFS_View_MouseDoubleClick(System::Object^ 
 			}
 		}
 	}
-	if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
-	Path = PFSHistory->Peek()->Path;
+	//if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
+	//Path = PFSHistory->Peek()->Path;
 	//lista arquivos
 	//HDD->Query_Part_Path(CurrDev, HDD->GetPartName(CurrDev, PFS_View->SelectedItems[0]->Text));
 
@@ -356,7 +376,7 @@ System::Void PFSHDDManager::MainForm::PFS_ContextMenu_Opening(System::Object^ se
 }
 System::Void PFSHDDManager::MainForm::PATH_VIEW_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e)
 {
-	if (Char::IsControl(e->KeyChar))
+	/*if (Char::IsControl(e->KeyChar))
 		PATH_VIEW->SelectedItems->Clear();
 		if (e->KeyChar == wchar_t::Parse(""))for each (Windows::Forms::ListViewItem^ item in PATH_VIEW->Items)
 		{
@@ -364,17 +384,43 @@ System::Void PFSHDDManager::MainForm::PATH_VIEW_KeyPress(System::Object^ sender,
 			{
 				item->Selected = true;
 			}
-		};
+		};*/
 	return System::Void();
 }
 System::Void PFSHDDManager::MainForm::BTN_Put_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	if (PATH_VIEW->SelectedItems->Count > 0 && PFSHistory->Count>0 &&(PFSHistory->Peek()->Type == File::Types::Folder|| PFSHistory->Peek()->Type == File::Types::Partition))
-		for each (ListViewItem ^ item in PATH_VIEW->SelectedItems)
+	if (Path_View->SelectedItems->Count > 0 && PFSHistory->Count > 0 && (PFSHistory->Peek()->Type == File::Types::Folder || PFSHistory->Peek()->Type == File::Types::Partition)) {
+		for each (ListViewItem ^ item in Path_View->SelectedItems)
 		{
-			HDD->PFS_Put(PATH_VIEWHistory->Peek(), item->Text, PFSHistory->Peek());
+			if (IO::DirectoryInfo(DirInfoHistory->Peek()->FullName + item->Text).Exists) {
+				HDD->PFS_MkDir(PFSHistory->Peek(), item->Text);
+				Put_PFS(gcnew IO::DirectoryInfo(DirInfoHistory->Peek()->FullName + "\\" + item->Text), PFSHistory->Peek()->GetChildName(item->Text));
+			}
+			if (IO::FileInfo(DirInfoHistory->Peek()->FullName + "\\" + item->Text).Exists)
+				if (item->Text != "desktop.ini")
+					if (!item->Text->ToUpper()->Contains(".ISO") && !item->Text->ToUpper()->Contains(".BIN") && !item->Text->ToUpper()->Contains(".CUE"))
+						HDD->PFS_Put(DirInfoHistory->Peek()->FullName->Replace("\\", "/"), item->Text, PFSHistory->Peek());
+					else NotImplemented("Dumping ISO files is not fully working yet!");
 		}
+	}
+	ViewPFSPath();
 }
+
+System::Void PFSHDDManager::MainForm::Put_PFS(IO::DirectoryInfo^ dir, File^ file) {
+	for each (IO::DirectoryInfo^ item in dir->GetDirectories())
+	{
+		HDD->PFS_MkDir(file, item->Name);
+		Put_PFS(item, file->GetChildName(item->Name));
+	}
+	for each (IO::FileInfo^ fli in dir->GetFiles())
+	{
+		if(fli->Name != "desktop.ini")
+			if(fli->Extension->ToUpper() != ".ISO" && fli->Extension->ToUpper() != ".BIN" && fli->Extension->ToUpper() != ".CUE")
+				HDD->PFS_Put(dir->FullName, fli->Name, file);
+			else NotImplemented("Dumping ISO files is not fully working yet!");
+	}
+}
+
 System::Void PFSHDDManager::MainForm::BTN_Get_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	return System::Void();
@@ -411,15 +457,6 @@ System::Void PFSHDDManager::MainForm::NewFolderToolStripMenuItem_Click(System::O
 	if(name->Show("Folder Name:") == Forms::DialogResult::OK)
 		HDD->PFS_MkDir(PFSHistory->Peek(), name->Text);
 	ViewPFSPath();
-}
-
-System::Void PFSHDDManager::MainForm::PATH_VIEW_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
-{
-	if (Path->EndsWith("\\")) Path = Path->Substring(0, Path->Length - 1);
-	Path = Path + "\\" + PATH_VIEW->SelectedItems[0]->Text;
-
-	ViewPath(Path);
-	return System::Void();
 }
 
 /*Readings:

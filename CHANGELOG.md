@@ -1,19 +1,29 @@
-V0.21.15.7{
+V0.23.16.9{
 	ADDED:
-		Rename Option in PFSView Context Menu
 		ScreenShot added
+		Now the program can transfer files and folders.
+		Now folders with subfolders and files can be removed
+		MessageBox to identify Functions that needs implementation
+		Conditions in PFS_Put function
+		Functions to handle Multipla ways of usage to PUT command
+
 	CHANGED:
+		Reimplemented File explorer entirely
 
 	FIXED:
+		Some wrong codding in the "MKFile" function
+		Missplaced code in RMDir function
+		Missplaced code in RM function
 
 	REMOVED:
+		PFS_Puts function
 
 	TODO:
 		Implement Go button
 		Implement re-initialize code
-		Implement toolstip Get Button
-		Reimplement File explorer
+		Implement toolstrip Get Button
 		Identify game ISO`s with the game icon
+		Install isos in the PS2 HDD
 
 V0.19.15.7{
 	ADDED:
