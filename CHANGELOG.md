@@ -1,8 +1,10 @@
-V0.23.16.12{
+V0.23.16.13{
 	FIXED:
 		AutoRefresh not working when copying something to subfolder
 		AutoRefresh not working when removing something from subfolder
 		Fatal error when removing a newly created subfolder
+		Function to update the view being called multiple times at once
+
 	TODO:
 		ProgressBar when putting files
 		Implement Go button

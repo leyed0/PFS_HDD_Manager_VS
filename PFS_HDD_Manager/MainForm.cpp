@@ -143,55 +143,11 @@ System::Void PFSHDDManager::MainForm::Path_View_MouseDoubleClick(System::Object^
 }
 
 System::Void PFSHDDManager::MainForm::Debug_Button_Click(System::Object^  sender, System::EventArgs^  e) {
-	//HDD->PFS_Mkpart(HDD->GetDevName("hdd5:"),"Debug", 128);
-	//richTextBox1->Text = HDD->output;
-	//richTextBox1->Text = HDD->Debug();
-
-	//PFSShell->OutputDataReceived();
-	//PFS->StartInfo->FileName = "shell\\1_090.exe";
-	//PFS->StartInfo->FileName = "cmd";
-	//PFSShell->StartInfo->CreateNoWindow = true;
-	//PFSShell->StartInfo->ErrorDialog = false;
-	//PFSShell->StartInfo->UseShellExecute = false;
-	//PFSShell->StartInfo->RedirectStandardError = true;
-	//PFSShell->StartInfo->RedirectStandardInput = true;
-	//PFSShell->StartInfo->RedirectStandardOutput = true;
-	//PFSShell->EnableRaisingEvents = true;
-	//PFSShell->Start();
-	//PFSShell->StandardInput->WriteLine("device hdd2:");
-	//PFSShell->StandardInput->WriteLine("mkpart teste2 128");
-	//PFSShell->StandardInput->WriteLine("mount +OPL");
-	//PFSShell->StandardInput->WriteLine("mkdir APPS");
-	//PFSShell->StandardInput->WriteLine("mkdir ART");
-	//PFSShell->StandardInput->WriteLine("mkdir CD");
-	//PFSShell->StandardInput->WriteLine("mkdir CFG");
-	//PFSShell->StandardInput->WriteLine("mkdir CHT");
-	//PFSShell->StandardInput->WriteLine("mkdir DVD");
-	//PFSShell->StandardInput->WriteLine("mkdir POPS");
-	//PFSShell->StandardInput->WriteLine("mkdir VMC");
-	//PFSShell->StandardInput->WriteLine("put pesquisa.png");
-	//PFSShell->StandardInput->WriteLine("ls");
-	//PFSShell->StandardInput->WriteLine("lcd");
-
-	//PFSShell->StandardInput->WriteLine("exit");
-	//richTextBox1->Text += PFSShell->StandardOutput->ReadToEnd();
 }
 
 
 System::Void PFSHDDManager::MainForm::StartProcess(System::String^ fileName, System::String^ arguments)
 {
-	////  Create the process start info.
-	//var processStartInfo = new ProcessStartInfo(fileName, arguments);
-
-	////  Set the options.
-	//processStartInfo.UseShellExecute = false;
-	//processStartInfo.ErrorDialog = false;
-	//processStartInfo.CreateNoWindow = true;
-
-	////  Specify redirection.
-	//processStartInfo.RedirectStandardError = true;
-	//processStartInfo.RedirectStandardInput = true;
-	//processStartInfo.RedirectStandardOutput = true;
 }
 
 
@@ -233,7 +189,7 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR2_SelectedIndexChanged(System::Ob
 
 
 System::Void PFSHDDManager::MainForm::ViewPFSPath() {
-	HDD->Query();
+	//HDD->Query();
 	PFS_View->Clear();
 	System::Windows::Forms::ImageList^ IMAGELIST;
 	if (PFS_View->View == System::Windows::Forms::View::LargeIcon)  IMAGELIST = ICONS_LARGE;
@@ -255,7 +211,7 @@ System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 			break;
 		case File::Types::Partition:
 			try { HDD->Query_File_Path(PFSHistory->Peek()); }
-			catch (String^ Error) { 
+			catch (String^ Error) {
 				if (MessageBox::Show("the selected partition is not in PFS System. Initialize it now?",
 					"Non PFS Partition", System::Windows::Forms::MessageBoxButtons::YesNo) == Forms::DialogResult::Yes)
 					HDD->PFS_Mkfs(PFSHistory->Peek());
@@ -265,9 +221,6 @@ System::Void PFSHDDManager::MainForm::ViewPFSPath() {
 					return;
 				}
 			}
-
-			try { HDD->Query_File_Path(PFSHistory->Peek()); }
-			catch (String^ Error) {}
 			for each (File ^ file in PFSHistory->Peek()->Childs)
 			{
 				if (file->Type == File::Types::File) PFS_View->Items->Add(file->Name, IMAGELIST->Images->Count - 2);
