@@ -1,0 +1,72 @@
+
+PFS (PlayStation File System) client for Linux/Unix/Windows
+===========================================================
+
+
+What is this?
+-------------
+
+This is an incomplete port of ps2sdk's (http://ps2dev.org) APA, PFS
+and iomanX libraries to Linux/Unix. Port exports full access to
+iomanX's API (APA and PFS drivers are registered in iomanX). That
+means, that one can work with APA partitions and can access PFS on the
+Linux/Unix side almost as easy as working with local files.
+
+Because original iomanX exports API colliding with host OS API, iomanX
+functions and constants are prefixed with iomanx_/IOMANX_,
+accordingly. Usage of iomanX API requires some knowledge of PS2
+development; at least knowledge of mount partition, use file-system,
+unmount partition sequence of steps. Simple use-cases can be found in
+the supplied sources (startup.c).
+
+Patches over APA and PFS drivers are separated and kept as minimal as
+possible to allow an easy upgrade to future ps2sdk versions. ATM
+patches include only function/variable re-naming and truncation of
+imports files.
+
+
+What is included?
+-----------------
+
+Means to manipulate files and directories on a PFS partition from the
+host OS on a locally attached or networked PS2 HDD. It is also
+possible to debug APA and PFS on the host OS.
+
+
+What is NOT included?
+---------------------
+
+ * GUI (as usual);
+ * 64-bit compiler compatibility;
+ * little-endian compatibility;
+
+
+How to give it a try (no warrany whatsoever)
+--------------------------------------------
+
+Fetch Windows build or compile it yourself. To compile hdl_dump's
+sources need to be unpacked next to pfs sources (hdl_dump dir and pfs
+dir need to be on the same level). You need a 32-bit compiler on
+big-endian box to make it work; 32-bit chroots works just fine.
+
+./pfsshell
+> help
+> device 192.168.0.10
+# ls
+# mount +Misc
++Misc:/# ls
+...
+# umount
+# exit
+
+
+Disclaimer
+----------
+
+This... thing comes with no warrany whatsoever. Use at your own risk.
+
+
+Please, send port bug-reports to w1zard0f07@yahoo.com. APA and PFS
+bug-reports should probably be reported at ps2dev sit.
+
+Wizard of Oz, over and out.

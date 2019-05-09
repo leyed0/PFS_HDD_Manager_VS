@@ -158,7 +158,7 @@ public:
 
 	//OK
 	//Removes the given file from the given path, partition and device
-	System::Void PFS_Rename(Device^ Dev, String^ Part, String^ Dest, String^ OldName, String^ NewName);
+	System::Void PFS_Rename(File^ Origin, String^ NewName);
 
 	//Remove the given path - removes child files if exists
 	System::Void Remove(File^);

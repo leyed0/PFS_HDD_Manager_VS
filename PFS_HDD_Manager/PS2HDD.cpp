@@ -251,12 +251,7 @@ System::Void PS2HDD::PFS_MkDir(File^ parent, String^ name)
 	PFSShell->WaitForExit();
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
-	File^ tmp = gcnew File(name, File::Types::Folder, parent);
-	tmp->Root = parent->Root;
-	tmp->PartRoot = parent->PartRoot;
-	tmp->Path = parent->Path + "/" + tmp->Name;
-	if (parent->Childs == nullptr) parent->Childs = gcnew System::Collections::Generic::List<File^>;
-	parent->Childs->Add(tmp);
+	Query_File_Path(parent);
 	if (output->Contains("error")) return;
 	return;
 }
@@ -275,6 +270,7 @@ System::Void  PS2HDD::PFS_RmDir(File^ dir)
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
 	if (output->Contains("error")) return;
+	//Query_File_Path(dir->Parent);
 	return;
 }
 
@@ -324,6 +320,7 @@ System::Void  PS2HDD::PFS_Put(String^ Orig, String^ Name, File^ Dest)
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
 	if (output->Contains("error")) return;
+	Query_File_Path(Dest);
 	return;
 }
 
@@ -344,22 +341,25 @@ System::Void  PS2HDD::PFS_RM(File^ file)
 	PFSShell->WaitForExit();
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
+	
 	//file->Parent->Childs->Remove(file);
 	if (output->Contains("error")) return;
+	//Query_File_Path(file->Parent);
 	return;
 }
 
-System::Void  PS2HDD::PFS_Rename(Device^ Dev, String^ Part, String^ Dest, String^ OldName, String^ NewName)
+System::Void  PS2HDD::PFS_Rename(File^ Origin, String^ NewName)
 {
 	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
-	PFSShell->StandardInput->WriteLine("mount " + Part);
-	PFSShell->StandardInput->WriteLine("cd " + Dest);
-	PFSShell->StandardInput->WriteLine("rename " + OldName + " " + NewName);
+	PFSShell->StandardInput->WriteLine("device " + Origin->Root->Name);
+	PFSShell->StandardInput->WriteLine("mount \"" + Origin->PartRoot->Name + "\"");
+	PFSShell->StandardInput->WriteLine("cd \"" + Origin->Path + "\"");
+	PFSShell->StandardInput->WriteLine("rename \"" + Origin->Name + "\" \"" + NewName+"\"");
 	PFSShell->StandardInput->WriteLine("exit");
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
 	if (output->Contains("error")) return;
+	Query_File_Path(Origin->Parent);
 	return;
 }
 
@@ -386,6 +386,7 @@ System::Void PS2HDD::Remove(File^ file)
 		default:
 			break;
 		}
+		Query_File_Path(file->Parent);
 	}
 	catch (String^ Error) { throw Error; };
 	return System::Void();

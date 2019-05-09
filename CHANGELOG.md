@@ -1,3 +1,17 @@
+V0.23.16.12{
+	FIXED:
+		AutoRefresh not working when copying something to subfolder
+		AutoRefresh not working when removing something from subfolder
+		Fatal error when removing a newly created subfolder
+	TODO:
+		ProgressBar when putting files
+		Implement Go button
+		Implement re-initialize code
+		Implement toolstrip Get Button
+		Identify game ISO`s with the game icon
+		Install isos in the PS2 HDD
+}
+
 V0.23.16.9{
 	ADDED:
 		ScreenShot added

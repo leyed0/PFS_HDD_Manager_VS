@@ -135,6 +135,7 @@ System::Void PFSHDDManager::MainForm::DRIVE_LTR_SelectedIndexChanged(System::Obj
 
 System::Void PFSHDDManager::MainForm::Path_View_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e)
 {
+	if (DirInfoHistory->Count <= 0) return;
 	//if (Path_View->SelectedItems->Count > 0) MessageBox::Show("done");
 	String^ Test = DirInfoHistory->Peek()->FullName + Path_View->SelectedItems[0]->Text + "\\";
 	DirInfoHistory->Push(gcnew IO::DirectoryInfo(DirInfoHistory->Peek()->FullName + Path_View->SelectedItems[0]->Text + "\\"));
