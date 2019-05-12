@@ -46,7 +46,7 @@ namespace PFSHDDManager {
 	//BackgroundWorker^ teste;
 	private: array<System::String^> ^dir, ^file;
 	private: System::String^ Path;
-	private: System::Boolean debug = false;
+	private: System::Boolean debug = false, UpdateView = true, UpdatePfsView = true;
 	private: System::Windows::Forms::ImageList^ ICONS_LARGE;
 
 	private: System::Windows::Forms::ContextMenuStrip^  PATH_VIEW_CONTEXT;
@@ -103,6 +103,7 @@ namespace PFSHDDManager {
 	private: System::Windows::Forms::Button^ BTN_Put;
 	private: System::Windows::Forms::Button^ BTN_Get;
 	private: System::Windows::Forms::ListView^ Path_View;
+	private: System::Windows::Forms::ToolStripMenuItem^ renameToolStripMenuItem;
 
 
 
@@ -143,6 +144,7 @@ namespace PFSHDDManager {
 			this->createPartitionToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newFolderToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->RemoveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->renameToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->getToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->reInitializeDeviceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel3 = (gcnew System::Windows::Forms::TableLayoutPanel());
@@ -362,12 +364,12 @@ namespace PFSHDDManager {
 			// 
 			// PFS_ContextMenu
 			// 
-			this->PFS_ContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+			this->PFS_ContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
 				this->createPartitionToolStripMenuItem,
-					this->newFolderToolStripMenuItem, this->RemoveToolStripMenuItem, this->getToolStripMenuItem, this->reInitializeDeviceToolStripMenuItem
+					this->newFolderToolStripMenuItem, this->RemoveToolStripMenuItem, this->renameToolStripMenuItem, this->getToolStripMenuItem, this->reInitializeDeviceToolStripMenuItem
 			});
 			this->PFS_ContextMenu->Name = L"PFS_MainStrip";
-			this->PFS_ContextMenu->Size = System::Drawing::Size(174, 114);
+			this->PFS_ContextMenu->Size = System::Drawing::Size(174, 136);
 			this->PFS_ContextMenu->Opening += gcnew System::ComponentModel::CancelEventHandler(this, &MainForm::PFS_ContextMenu_Opening);
 			// 
 			// createPartitionToolStripMenuItem
@@ -391,11 +393,19 @@ namespace PFSHDDManager {
 			this->RemoveToolStripMenuItem->Text = L"Remove";
 			this->RemoveToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::RemoveToolStripMenuItem_Click);
 			// 
+			// renameToolStripMenuItem
+			// 
+			this->renameToolStripMenuItem->Name = L"renameToolStripMenuItem";
+			this->renameToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->renameToolStripMenuItem->Text = L"Rename";
+			this->renameToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::RenameToolStripMenuItem_Click);
+			// 
 			// getToolStripMenuItem
 			// 
 			this->getToolStripMenuItem->Name = L"getToolStripMenuItem";
 			this->getToolStripMenuItem->Size = System::Drawing::Size(173, 22);
 			this->getToolStripMenuItem->Text = L"Get";
+			this->getToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::GetToolStripMenuItem_Click);
 			// 
 			// reInitializeDeviceToolStripMenuItem
 			// 
@@ -404,6 +414,7 @@ namespace PFSHDDManager {
 			this->reInitializeDeviceToolStripMenuItem->Size = System::Drawing::Size(173, 22);
 			this->reInitializeDeviceToolStripMenuItem->Text = L"Re-Initialize Device";
 			this->reInitializeDeviceToolStripMenuItem->ToolTipText = L"Destroys all the Data on It";
+			this->reInitializeDeviceToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::ReInitializeDeviceToolStripMenuItem_Click);
 			// 
 			// tableLayoutPanel3
 			// 
@@ -517,6 +528,7 @@ namespace PFSHDDManager {
 			// 
 			// Path_View
 			// 
+			this->Path_View->AllowDrop = true;
 			this->Path_View->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->Path_View->LargeImageList = this->ICONS_LARGE;
 			this->Path_View->Location = System::Drawing::Point(3, 36);
@@ -716,6 +728,7 @@ private: System::Void PATH_VIEW_ItemDrag(System::Object^ sender, System::Windows
 private: System::Void PATH_VIEW_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 private: System::Void BTN_Put_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void BTN_Get_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void Get(File^Origin, String^ Dest);
 private: System::Void RemoveToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void CreatePartitionToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void NewFolderToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
@@ -723,5 +736,8 @@ private: System::Void DRIVE_LTR_SelectedIndexChanged(System::Object^ sender, Sys
 private: System::Void Path_View_MouseDoubleClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 		 System::Void Put_PFS(IO::DirectoryInfo^, File^);
 		 System::Void NotImplemented(String^ txt) { MessageBox::Show(txt, "Not implemented yet"); }
+private: System::Void ReInitializeDeviceToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void GetToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void RenameToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

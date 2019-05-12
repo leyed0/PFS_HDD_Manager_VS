@@ -134,6 +134,7 @@ namespace PFSHDDManager {
 #pragma endregion
 	public: System::Windows::Forms::DialogResult Show();
 	public: System::Windows::Forms::DialogResult Show(String^);
+	public: System::Windows::Forms::DialogResult Show(String^, String^);
 	private: System::Void BTN_OK_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void BTN_Cancel_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void TXTBX_Input_TextChanged(System::Object^ sender, System::EventArgs^ e);

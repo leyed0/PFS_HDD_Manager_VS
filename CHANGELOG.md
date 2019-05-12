@@ -1,3 +1,33 @@
+V0.29.16.10{
+	ADDED:
+		Get Function working for files and folders
+		Rename function working
+		Left Go button working
+		Reinitialize device working
+		Iso images being identified with disc icon
+		InputBox have option to start with default text in it
+
+	FIXED:
+		Issue where the right view was updating when right clicked
+
+	TODO:
+		Implement right Go button
+		Install isos in the PS2 HDD
+}
+
+V0.23.16.14{
+	FIXED:
+		Fatal error when deleting a Partition
+
+	TODO:
+		ProgressBar when putting files
+		Implement Go button
+		Implement re-initialize code
+		Implement toolstrip Get Button
+		Identify game ISO`s with the game icon
+		Install isos in the PS2 HDD
+}
+
 V0.23.16.13{
 	FIXED:
 		AutoRefresh not working when copying something to subfolder

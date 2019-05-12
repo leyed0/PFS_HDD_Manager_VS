@@ -114,7 +114,7 @@ public:
 
 	//OK
 	//Initialize the HDD into PFS system using PFSShell
-	System::Boolean PFS_Initialize(Device^ dev);
+	System::Boolean PFS_Initialize(File^ dev);
 
 	//OK
 	//Make a Partition with the given Name and Size(MB)
@@ -143,7 +143,7 @@ public:
 
 	//OK
 	//copy the fine in the given path from ps2 hdd to the givem system path
-	System::Void PFS_Get(Device^ Dev, String^ Part, String^ Orig, String^ Name, String^ Dest);
+	System::Void PFS_Get(File^ Origin, String^ Dest);
 
 	//OK
 	//copy the fine in the given path from ps2 hdd to the givem system path
@@ -205,5 +205,5 @@ public:
 //	backup_toc:
 //	restore_toc*:
 //	diag: diag "device": scans device for partition errors 
-//	modify*:
+//	modify*: modify device game [new_name] [new_flags]
 //	copy_hdd*: copy the hdd

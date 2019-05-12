@@ -201,11 +201,15 @@ System::Boolean PS2HDD::HDL_Remove(File^ Part)
 	return true;
 }
 
-System::Boolean PS2HDD::PFS_Initialize(Device^ dev)
+System::Boolean PS2HDD::PFS_Initialize(File^ dev)
 {
 	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("device " + dev->Name);
+	PFSShell->StandardInput->WriteLine("device " + dev->Root->Name);
 	PFSShell->StandardInput->WriteLine("initialize yes");
+	PFSShell->StandardInput->WriteLine("mkfs __net");
+	PFSShell->StandardInput->WriteLine("mkfs __system");
+	PFSShell->StandardInput->WriteLine("mkfs __sysconf");
+	PFSShell->StandardInput->WriteLine("mkfs __common");
 	PFSShell->StandardInput->WriteLine("exit");
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
@@ -274,14 +278,14 @@ System::Void  PS2HDD::PFS_RmDir(File^ dir)
 	return;
 }
 
-System::Void  PS2HDD::PFS_Get(Device^ Dev, String^ Part, String^ Orig, String^ Name, String^ Dest)
+System::Void  PS2HDD::PFS_Get(File^ Origin, String^ Dest)
 {
 	PFSShell->Start();
-	PFSShell->StandardInput->WriteLine("device " + Dev->Name);
-	PFSShell->StandardInput->WriteLine("mount " + Part);
-	PFSShell->StandardInput->WriteLine("cd " + Orig);
-	PFSShell->StandardInput->WriteLine("lcd " + Dest);
-	PFSShell->StandardInput->WriteLine("get " + Name);
+	PFSShell->StandardInput->WriteLine("device " + Origin->Root->Name);
+	PFSShell->StandardInput->WriteLine("mount " + Origin->PartRoot->Name);
+	if(Origin->Parent->Type == File::Types::Folder) PFSShell->StandardInput->WriteLine("cd \"" + Origin->Parent->Path->Substring(Origin->Parent->Path->IndexOf("/"))+"\"");
+	PFSShell->StandardInput->WriteLine("lcd \"" + Dest->Replace("\\", "/") +"\"");
+	PFSShell->StandardInput->WriteLine("get \"" + Origin->Name+"\"");
 	PFSShell->StandardInput->WriteLine("exit");
 	output = PFSShell->StandardOutput->ReadToEnd();
 	output += PFSShell->StandardError->ReadToEnd();
@@ -372,6 +376,7 @@ System::Void PS2HDD::Remove(File^ file)
 		case File::Types::PartitionNull:
 		case File::Types::Partition:
 			HDL_Remove(file);
+			Query_Part(GetDevByName(file->Root->Name));
 			break;
 		case File::Types::File:
 			PFS_RM(file);
@@ -386,7 +391,7 @@ System::Void PS2HDD::Remove(File^ file)
 		default:
 			break;
 		}
-		Query_File_Path(file->Parent);
+		if(file->Type == File::Types::File || file->Type == File::Types::Folder)Query_File_Path(file->Parent);
 	}
 	catch (String^ Error) { throw Error; };
 	return System::Void();
