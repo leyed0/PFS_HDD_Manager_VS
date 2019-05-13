@@ -1,3 +1,10 @@
+V0.29.16.13{
+	FIXED:
+		Files andFolders on Subfolders would not be renamed
+		if pasted a path on the left explorer and double clicked a folder nothing would happen
+		Creating a new partition would always return a error
+}
+
 V0.29.16.10{
 	ADDED:
 		Get Function working for files and folders

@@ -2,6 +2,7 @@
 
 System::Void PFSHDDManager::InputBox::BTN_OK_Click(System::Object^ sender, System::EventArgs^ e)
 {
+	Text = TXTBX_Input->Text;
 	this->DialogResult = System::Windows::Forms::DialogResult::OK;
 	this->Close();
 	return System::Void();

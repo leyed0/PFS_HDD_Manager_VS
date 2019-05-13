@@ -86,7 +86,7 @@ System::Void PFSHDDManager::MainForm::BTN_GO_Click(System::Object ^ sender, Syst
 {
 	if (String::IsNullOrEmpty(TXTBX_Path_View->Text)) return;
 	if (IO::DirectoryInfo(TXTBX_Path_View->Text).Exists)
-		DirInfoHistory->Push(gcnew IO::DirectoryInfo(TXTBX_Path_View->Text));
+		DirInfoHistory->Push(gcnew IO::DirectoryInfo(TXTBX_Path_View->Text + "\\"));
 	UpdateView = true;
 	ViewPath();
 	return System::Void();
@@ -330,7 +330,7 @@ System::Void PFSHDDManager::MainForm::BTN_Put_Click(System::Object^ sender, Syst
 	if (Path_View->SelectedItems->Count > 0 && PFSHistory->Count > 0 && (PFSHistory->Peek()->Type == File::Types::Folder || PFSHistory->Peek()->Type == File::Types::Partition)) {
 		for each (ListViewItem ^ item in Path_View->SelectedItems)
 		{
-			if (IO::DirectoryInfo(DirInfoHistory->Peek()->FullName + item->Text).Exists) {
+			if (IO::DirectoryInfo(DirInfoHistory->Peek()->FullName + "\\" + item->Text).Exists) {
 				HDD->PFS_MkDir(PFSHistory->Peek(), item->Text);
 				Put_PFS(gcnew IO::DirectoryInfo(DirInfoHistory->Peek()->FullName + "\\" + item->Text), PFSHistory->Peek()->GetChildName(item->Text));
 			}

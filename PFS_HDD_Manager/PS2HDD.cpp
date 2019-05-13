@@ -357,7 +357,8 @@ System::Void  PS2HDD::PFS_Rename(File^ Origin, String^ NewName)
 	PFSShell->Start();
 	PFSShell->StandardInput->WriteLine("device " + Origin->Root->Name);
 	PFSShell->StandardInput->WriteLine("mount \"" + Origin->PartRoot->Name + "\"");
-	PFSShell->StandardInput->WriteLine("cd \"" + Origin->Path + "\"");
+	String^ teste = "cd \"" + Origin->Parent->Path->Substring(Origin->Parent->Path->IndexOf("/")+1) + "\"";
+	if(Origin->Parent->Type == File::Types::Folder) PFSShell->StandardInput->WriteLine("cd \"" + Origin->Parent->Path->Substring(Origin->Parent->Path->IndexOf("/")) + "\"");
 	PFSShell->StandardInput->WriteLine("rename \"" + Origin->Name + "\" \"" + NewName+"\"");
 	PFSShell->StandardInput->WriteLine("exit");
 	output = PFSShell->StandardOutput->ReadToEnd();
