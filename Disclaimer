@@ -1,0 +1,9 @@
+I am looking for people to help revive this project.
+
+The way I designed it was awfull and i gave up.
+
+My ideal plan is to restart this project using an multiplatform gui system, and use the ps2 toolchain directly.
+
+the original project used a weir method of calling pfsshell and readding its output to organize the gui, and it is really unnefficient.
+
+If you want to help in any way, add a issue stating your intentions!
